@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Conditions
+{% endblock %}
+
+{% block main %}
+
+        <h1>Conditions</h1>
+        <table class="table">
+            <tr>
+                {% for time in weather_info[0][0] %}
+                    <th>{{ time }}</th>
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for temp in weather_info[0][3] %}
+                    <td>{{ temp }}°C</td>
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for symbol in weather_info[0][2] %}
+                    <td><img src="/static/images/symbols/{{ symbol }}.png" alt="weather symbol"></td>
+                {% endfor %}
+            </tr>
+        </table>
+        <table class="table">
+            <tr>
+                <th>Sunrise</th>
+                <th>Sunset</th>
+            </tr>
+            <tr>
+                <td>{{ weather_info[2] }}</td>
+                <td>{{ weather_info[3] }}</td>
+            </tr>
+        </table>
+        
+
+        <P>
+            <table class="table">
+                <tr>
+                    {% for tide in tides %}
+                        <th>{{ tide.EventType }}</th>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for tide in tides %}
+                        <th>{{ tide.Time }}</th>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for tide in tides %}
+                        <td>{% if tide.EventType == "High Tide" %}<b>(No access to Tidal Pool)</b>{% endif %}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td>{% if tides[0].EventType == "High Tide" %}{{ swim_times[0][0] }} till {{ swim_times[0][1] }}{% endif %}</td>
+                    <td>{% if tides[1].EventType == "High Tide" %}{{ swim_times[0][0] }} till {{ swim_times[0][1] }}{% endif %}</td>
+                    <td>{% if tides[2].EventType == "High Tide" %}{{ swim_times[1][0] }} till {{ swim_times[1][1] }}{% endif %}</td>
+                    <td>{% if tides[3].EventType == "High Tide" %}{{ swim_times[1][0] }} till {{ swim_times[1][1] }}{% endif %}</td>
+                </tr>
+            </table>
+        </p>
+        {% if wind_speed_int > 19 %}<p class="text-danger">Wind speeds in excess of 20 MPH today - take care!</p>
+        {% elif wind_speed_int > 14 and wind_speed_int < 20 %}<p class="text-danger">Today is looking fairly windy</p>
+        {% elif wind_speed_int > 9 and wind_speed_int < 15 %}<p class="text-success">Today is looking a little </p>
+        {% else %}<p class="text-success">Today is looking calm, no strong winds</p>{% endif %}
+
+        {% if weather_info[0] == "North East" or "North" or "North West" %}<p class="text-success">Today's wind is mostly North facing</p>
+        {% elif weather_info[0]  == "East" or "West" %}<p class="text-warning">Today's wind is mostly perpendicular to the Tidal Pool</p>
+        {% else %}<p class="text-warning">Today's wind is mostly South facing (towards the coastline)</p>{% endif %}
+        <p>
+            <img src="{{ wind_plot }}"/>
+        </p>
+
+        <p>
+            <table class="table">
+                <tr>
+                    <th>
+                        Latest Risk Prediction
+                    </th>
+                    <th>
+                        Heavy Rain - Risk of Pollution Warnings
+                    </th>
+                    <th>
+                        Latest Water Quality Classifcation {{ pollution.latest_compliance_date}}
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        {{ pollution.risk_prediction}}
+                    </td>
+                    <td>
+                        {{ pollution.heavy_rain_warning}}
+                    </td>
+                    <td>
+                        {{ pollution.latest_compliance_assessment}}
+                    </td>
+                </tr>
+            </table>
+        </p>
+{% endblock %}

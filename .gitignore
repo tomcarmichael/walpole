@@ -1,0 +1,2 @@
+# Hide API password info from public github repo
+.env
