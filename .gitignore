@@ -3,3 +3,5 @@
 # Do not track change to py cache files
 *.pyc
 __pycache__/
+# Do not track virtual environment files
+venv/
