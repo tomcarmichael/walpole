@@ -1,8 +1,6 @@
 
-import requests, base64
+import requests
 from datetime import date, timedelta, datetime
-from matplotlib.figure import Figure
-from io import BytesIO
 from dotenv import load_dotenv
 import os
 
