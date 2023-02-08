@@ -1,2 +1,5 @@
 # Hide API password info from public github repo
 .env
+# Do not track change to py cache files
+*.pyc
+__pycache__/
