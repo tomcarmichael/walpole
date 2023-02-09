@@ -1,0 +1,1504 @@
+@base                   <http://environment.data.gov.uk/def/bathing-water-quality/> .
+@prefix bwq-ttl:		<http://environment.data.gov.uk/sources/def/bathing-water-quality.ttl> .
+#@prefix bwq-rdf:       <http://environment.data.gov.uk/sources/def/bathing-water-quality.rdf> .
+@prefix :        		<http://environment.data.gov.uk/def/bathing-water-quality/> .
+
+# Prefix for Monitoring Point Locations under INSPIRE environmental monitoring facilities theme.
+@prefix	loc-bwq:		<http://location.data.gov.uk/def/ef/SamplingPoint/> .
+
+# Prefix for Bathing Waters (associated with Monitoring Points) as ref-data under environment.data.gov.uk.
+@prefix	def-bw:			<http://environment.data.gov.uk/def/bathing-water/> .
+
+@prefix rdfs:    		<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:     		<http://www.w3.org/2002/07/owl#> .
+@prefix xsd:     		<http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:     		<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix qb:      		<http://purl.org/linked-data/cube#> .
+@prefix time:	 		<http://www.w3.org/2006/time#> .
+@prefix	interval:       <http://reference.data.gov.uk/def/intervals/> .
+@prefix skos:   	    <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms:        <http://purl.org/dc/terms/> .
+@prefix foaf:           <http://xmlns.com/foaf/0.1/> .
+@prefix cc12:           <http://environment.data.gov.uk/def/bwq-cc-2012/> .
+@prefix cc15:           <http://environment.data.gov.uk/def/bwq-cc-2015/> .
+
+
+:
+      a       owl:Ontology ;
+      rdfs:isDefinedBy      bwq-ttl: ;
+      dcterms:created		"2010-08-16"^^xsd:date;
+      dcterms:modified		"2012-03-29"^^xsd:date,"2014-11-26";
+      dcterms:contributor	    [foaf:mbox_sha1sum "484329f6dec65adefd62ade6a5eb28037560dce4"; foaf:name "Stuart Williams"@en];
+      # add your names here
+
+      dcterms:license 	<http://www.opendatacommons.org/licenses/pddl/1.0/> ;
+
+      owl:imports cc12:,cc15:,def-bw:,
+                  <http://purl.org/linked-data/cube>,
+                  <http://www.w3.org/2006/time>,
+                  <http://www.w3.org/2004/02/skos/core>,
+                  <http://reference.data.gov.uk/def/intervals/>,
+                  <http://purl.org/linked-data/cube> ;
+
+      owl:versionInfo "0.2"^^xsd:string .
+
+
+###############################################################
+#
+# Annual bathing water compliance DSD.
+#
+###############################################################
+:complianceDsd
+  a						qb:DataStructureDefinition;
+  rdfs:comment			"A DSD for Bathing Water Quality Annual Compliance assessment reporting."@en;
+  rdfs:label				"complianceDsd"@en;
+  rdfs:isDefinedBy		bwq-ttl: ;
+  qb:component			[qb:dimension	:bathingWater;  qb:order 1 ],
+                        [qb:dimension	:samplingPoint; qb:order 2 ],
+                        [qb:dimension	:sampleYear;    qb:order 3 ],
+                        [qb:measure		:complianceClassification],
+                        [qb:attribute	:inYearDetail],
+                        # New attributes added for change to rBWD
+                        # to indictate assessment regime and projected/actual nature or assessment
+                        # where absent defaults values are :cBWD and :actual-assessment respectively
+                        [qb:attribute   :assessmentRegime],
+                        [qb:attribute   :assessmentQualifier],
+                        [qb:attribute   :intestinalEnterococciStats],
+                        [qb:attribute   :escherichiaColiStats ],
+                        [qb:attribute   :firstSampleDate ],
+                        [qb:attribute   :finalSampleDate ],
+                        [qb:attribute   :latestStepChange ];
+  qb:sliceKey			:complianceByYearKey,
+                        :complianceBySamplingPointKey;
+  .
+
+########################################################################
+# Annual Compliance Assessment attributes and measures
+########################################################################
+:complianceClassification
+    a                   qb:MeasureProperty, qb:CodedProperty;
+    rdfs:label          "complianceClassification"@en;
+    rdfs:comment        "Annual bathing water quality classification"@en;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    qb:codeList         :compliance;
+    rdfs:range          :Compliance;
+    rdfs:seeAlso        <http://www.opsi.gov.uk/legislation/european/directive/1976/0160>,
+                        <http://www.legislation.gov.uk/id/uksi/1991/1597>,
+                        <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/1>,
+                        <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/2>,
+                        <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/3>,
+                        <http://www.legislation.gov.uk/id/uksi/2003/1238>,
+                        <http://www.opsi.gov.uk/legislation/european/directive/2006/0007>,
+                        <http://www.legislation.gov.uk/id/uksi/2008/1097>,
+                        <http://www.legislation.gov.uk/id/wsi/2014/1067>,
+                        <http://www.legislation.gov.uk/id/uksi/2014/2363>,
+                        <http://www.legislation.gov.uk/id/uksi/2013/1675>;
+    .
+
+:inYearDetail
+    a					owl:ObjectProperty, qb:AttributeProperty;
+    rdfs:label			"in-year detail"@en;
+    rdfs:comment		"A property which relates an annual assessment for a bathing water with qb:Slices for the in-seasons sample assessments from which the annual assessment was computed"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:domain			:ComplianceAssessment;
+    rdfs:range			:BySamplingPointYearSlice;
+    .
+
+:firstSampleDate
+	a					owl:DatatypeProperty, qb:AttributeProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+	rdfs:label			"firstSampleDate"@en ;
+	rdfs:comment		"The earliest date on which a sample used in a compliance assessment was taken. In most examples this will be the pre-season sample from year 1"@en ;
+	rdfs:domain			:ComplianceAssessment ;
+	rdfs:range			xsd:date ;
+	.
+	
+:finalSampleDate
+	a					owl:DatatypeProperty, qb:AttributeProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+	rdfs:label			"finalSampleDate"@en ;
+	rdfs:comment		"The latest date on which a sample used in a compliance assessment was taken. In most examples this will be the final sample from year 4"@en ;
+	rdfs:domain			:ComplianceAssessment ;
+	rdfs:range			xsd:date ;
+	.
+
+:assessmentRegime
+    a                   owl:ObjectProperty, qb:AttributeProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label          "assessmentRegime"@en ;
+    rdfs:comment        "A property for indicating the legislation and method applicable to a compliance assessment"@en ;
+    rdfs:range          :AssessmentRegime;
+    .
+
+:assessmentQualifier
+    a                   owl:ObjectProperty, qb:AttributeProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label          "assessmentQualifier"@en ;
+    rdfs:comment        "A property for qualifying a compliance assessment, typically as 'projected' or 'actual'"@en ;
+    rdfs:range          :AssessmentQualifier;
+    rdfs:domain         :ComplianceAssessment;
+    .
+    
+:intestinalEnterococciStats
+	a					owl:ObjectProperty, qb:AttributeProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+	rdfs:label			"intestinalEnterococciStats"@en ;
+	rdfs:comment		"A property for referencing summary statistics about intestinal enterococci colony formation counts associated with an annual compliance assessment."@en ;
+	rdfs:domain			:ComplianceAssessment ;
+	rdfs:range			:SummaryStatistics ;
+	.
+	
+:escherichiaColiStats
+	a					owl:ObjectProperty, qb:AttributeProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+	rdfs:label			"escherichiaColiStats"@en ;
+	rdfs:comment		"A property for referencing summary statistics about escherichia-coli colony formation counts associated with an annual compliance assessment."@en ;
+	rdfs:domain			:ComplianceAssessment ;
+	rdfs:range			:SummaryStatistics ;
+	.
+
+:SummaryStatistics
+	a					owl:Class ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+	rdfs:label			"SummaryStatistics"@en ;
+	rdfs:comment		"A class for representing summary statistics associated with a determinand used in making an annual compliance assessment"@en ;
+	rdfs:subClassOf     [
+          a owl:Restriction ;
+          owl:onProperty :measure ;
+          owl:cardinality 1;
+    ]
+	.
+	
+:sampleCount
+	a					owl:FunctionalProperty, owl:DatatypeProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label			"sampleCount"@en;
+    rdfs:comment		"The number of samples upon which the assessment is based"@en;
+    rdfs:domain			:SummaryStatistics ;
+    rdfs:range			xsd:integer ;
+    .
+	
+:minValue
+	a					owl:FunctionalProperty, owl:DatatypeProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label			"minValue"@en;
+    rdfs:comment		"The lowest value obtained from a sample included in the assessment"@en ;
+    rdfs:domain			:SummaryStatistics ;
+    rdfs:range			xsd:integer ;
+    .
+:maxValue
+	a					owl:FunctionalProperty, owl:DatatypeProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label			"maxValue"@en;
+    rdfs:comment		"The highest value obtained from a sample included in the assessment"@en ;
+    rdfs:domain			:SummaryStatistics ;
+    rdfs:range			xsd:integer ;
+    .
+
+:meanValue
+	a					owl:FunctionalProperty, owl:DatatypeProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label			"meanValue"@en;
+    rdfs:comment		"The mean value of all the samples included in the assessment"@en ;
+    rdfs:domain			:SummaryStatistics ;
+    rdfs:range			xsd:decimal ;
+    .
+
+:stdDeviation
+	a					owl:FunctionalProperty, owl:DatatypeProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label			"meanValue"@en;
+    rdfs:comment		"The standard deviation of all the sample values included in the assessment"@en ;
+    rdfs:domain			:SummaryStatistics ;
+    rdfs:range			xsd:decimal ;
+    .
+
+:meanLog10Value
+	a					owl:FunctionalProperty, owl:DatatypeProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label			"meanLog10Value"@en;
+    rdfs:comment		"The mean Log10 of all the sample values included in the assessment"@en ;
+    rdfs:domain			:SummaryStatistics ;
+    rdfs:range			xsd:decimal ;
+    .
+    
+:stdDeviationLog10
+	a					owl:FunctionalProperty, owl:DatatypeProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label			"stdDeviationLog10"@en;
+    rdfs:comment		"The standard deviation of Log10 of all the sample values included in the assessment"@en ;
+    rdfs:domain			:SummaryStatistics ;
+    rdfs:range			xsd:decimal ;
+    .
+    
+:percentile90
+	a					owl:FunctionalProperty, owl:DatatypeProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label			"percentile90"@en;
+    rdfs:comment		"The value at the 90th percentile of the assessment sample distribution."@en ;
+    rdfs:domain			:SummaryStatistics ;
+    rdfs:range			xsd:decimal ;
+    .
+
+:percentile95	
+	a					owl:FunctionalProperty, owl:DatatypeProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label			"percentile95"@en;
+    rdfs:comment		"The value at the 95th percentile of the assessment sample distribution."@en ;
+    rdfs:domain			:SummaryStatistics ;
+    rdfs:range			xsd:decimal ;
+    .
+
+
+########################################################################
+# AssessmentQualifier 'codelist' - added 26/11/2014
+########################################################################
+:AssessmentQualifier
+    a                   owl:Class ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label          "AssessmentQualifier"@en ;
+    rdfs:comment        "A skos:Concept subclass for assessment qualifiers."@en ;
+    rdfs:subClassOf     skos:Concept ;
+    .
+
+:assessment-qualifier
+    a                   skos:ConceptScheme ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label          "assessment qualifier concept scheme"@en ;
+    rdfs:comment        "A skos:ConceptScheme for assessment qualifiers"@en ;
+    skos:hasTopConcept  :projected,:actual-assessment;
+    .
+
+:projected-assessment
+    a                   :AssessmentQualifier ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label          "projected-assessment"@en;
+    skos:prefLabel      "projected-assessment"@en;
+    skos:definition     "Indicates a projected assessment under the given :AssessmentRegime. Typically used to report estimated assessments for some current regime where reported assessment have been made under some prior regime e.g. rBWD back-projections for assessment previously reported under the cBWD"@en ;
+    rdfs:comment        "Indicates a projected assessment under the given :AssessmentRegime. Typically used to report estimated assessments for some current regime where reported assessment have been made under some prior regime e.g. rBWD back-projections for assessment previously reported under the cBWD"@en ;
+    skos:inScheme       :assessment-qualifier;
+    skos:topConceptOf   :assessment-qualifier;
+    .
+
+:actual-assessment
+    a                   :AssessmentQualifier ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label          "actual assessment"@en ;
+    skos:prefLabel      "actual assessment"@en ;
+    skos:definition     "Indicates that the assessment is an actual assessment made according to the given :AssessmentRegime"@en ;
+    rdfs:comment        "Indicates that the assessment is an actual assessment made according to the given :AssessmentRegime"@en ;
+    skos:inScheme       :assessment-qualifier;
+    skos:topConceptOf   :assessment-qualifier;
+    .
+
+########################################################################
+# AssessmentRegime 'codelist' - added 26/11/2014
+########################################################################
+:AssessmentRegime
+    a                   owl:Class ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label          "AssessmentRegime"@en;
+    skos:prefLabel      "AssessmentRegime"@en;
+    rdfs:comment        "A skos:Concept subclass for assessment regimes"@en ;
+    rdfs:subClassOf     skos:Concept ;
+    .
+
+:assessment-regime
+    a                   skos:ConceptScheme ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label          "assessment regime concept scheme"@en;
+    skos:prefLabel      "assessment regime concept scheme"@en;
+    rdfs:comment        "A skos:ConceptScheme for assessment regimes."@en ;
+    skos:hasTopConcept  :cBWD, :cBWD-rBWD-transition, :rBWD;
+    .
+  
+:cBWD
+    a                   :AssessmentRegime ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label          "cBWD"@en ;
+    skos:prefLabel      "cBWD"@en ;
+    rdfs:comment        "Assessment Regime associated with the EC Bathing Water Directive (76/160/EEC)"@en ;
+    skos:definition     "Assessment Regime associated with the EC Bathing Water Directive (76/160/EEC)"@en ;
+    skos:inScheme       :assessment-regime ;
+    skos:topConceptOf   :assessment-regime ;
+    skos:notation       "cBWD";
+    rdfs:seeAlso        <http://www.legislation.gov.uk/id/uksi/1991/1597> ,
+                        <http://www.legislation.gov.uk/id/uksi/2003/1238> ;
+    .
+
+:cBWD-rBWD-transition
+    a                   :AssessmentRegime ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label          "cBWD-rBWD-transition"@en ;
+    skos:prefLabel      "cBWD-rBWD-transition"@en ;
+    rdfs:comment        "Assessment Regime associated with the Transition from EC Bathing Water Directive (76/160/EEC) to  EC Revised Bathing Water Directive (2006/7/EC)"@en ;
+    skos:definition     "Assessment Regime associated with the Transition from EC Bathing Water Directive (76/160/EEC) to  EC Revised Bathing Water Directive (2006/7/EC)"@en ;
+    skos:inScheme       :assessment-regime ;
+    skos:topConceptOf   :assessment-regime ;
+    skos:notation       "cBWD-rBWD-transition";
+    rdfs:seeAlso        <http://www.legislation.gov.uk/id/uksi/1991/1597> ,
+                        <http://www.legislation.gov.uk/id/uksi/2003/1238>,
+                        <http://www.legislation.gov.uk/id/uksi/2008/1097> ;
+    .
+
+:rBWD
+    a                   :AssessmentRegime ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label          "rBWD"@en ;
+    skos:prefLabel      "rBWD"@en ;
+    rdfs:comment        "Assessment Regime associated with the EC Revised Bathing Water Directive (2006/7/EC)"@en ;
+    skos:definition     "Assessment Regime associated with the EC Revised Bathing Water Directive (2006/7/EC)"@en ;
+    skos:inScheme       :assessment-regime ;
+    skos:topConceptOf   :assessment-regime ;
+    skos:notation       "rBWD";
+    rdfs:seeAlso        <http://www.legislation.gov.uk/id/wsi/2014/1067>,
+                        <http://www.legislation.gov.uk/id/uksi/2014/2363>,
+                        <http://www.legislation.gov.uk/id/uksi/2013/1675>,
+                        <http://www.legislation.gov.uk/id/uksi/2008/1097>;                       
+    .
+###############################################################
+# Annual Compliance Slice Keys
+###############################################################
+:complianceByYearKey
+  a						qb:SliceKey;
+  rdfs:label			"complianceByYearKey"@en;
+  rdfs:comment			"A slice key for grouping annual compliance assessments by year."@en;
+  rdfs:isDefinedBy		bwq-ttl: ;
+  qb:componentProperty	:sampleYear;
+  .
+
+:complianceBySamplingPointKey
+  a						qb:SliceKey;
+  rdfs:label				"complianceBySamplingPointKey"@en;
+  rdfs:comment			"A slice key for grouping annual compliance assessments by sampling point."@en;
+  rdfs:isDefinedBy		bwq-ttl: ;
+  qb:componentProperty	:samplingPoint;
+  .
+
+###############################################################
+# Annual Compliance Slices
+###############################################################
+:ComplianceByYearSlice
+  a						owl:Class, rdfs:Class;
+  rdfs:label				"ComplianceByYearSlice"@en;
+  rdfs:isDefinedBy		bwq-ttl: ;
+  rdfs:subClassOf			qb:Slice,
+              [ a owl:Restriction;
+                owl:onProperty	qb:sliceStructure;
+                owl:hasValue		:complianceByYearKey;
+              ]
+  .
+
+
+:ComplianceBySamplingPointSlice
+  a						owl:Class, rdfs:Class;
+  rdfs:label			"ComplianceBySamplingPointSlice"@en;
+  rdfs:isDefinedBy		bwq-ttl: ;
+  rdfs:subClassOf			qb:Slice,
+              [ a owl:Restriction;
+                owl:onProperty	qb:sliceStructure;
+                owl:hasValue		:complianceBySamplingPointKey;
+              ]
+  .
+###############################################################
+# Annual Compliance Datasets
+###############################################################
+:ComplianceDataset
+    a					owl:Class,rdfs:Class;
+    rdfs:subClassOf		qb:Dataset,
+              [ 	a 				owl:Restriction;
+                owl:onProperty	qb:structure;
+                owl:hasValue	:complianceDsd;
+              ];
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:label			"ComplianceDataset"@en;
+    rdfs:comment 		"A specialisation of qb:Dataset for Bathing Water Quality Annual Compliance Assessments."@en;
+    .
+
+###############################################################
+#
+# Specialised qb:Observation subclass for Bathing Water annual assessments.
+#
+###############################################################
+:ComplianceAssessment
+    a					owl:Class, rdfs:Class;
+    rdfs:label			"ComplianceAssessment"@en;
+    rdfs:comment		"Specialised qb:Observation subclass for Bathing Water Quality Annual Compliance Assessments."@en;
+    rdfs:subClassOf		qb:Observation,
+   	 					[	a owl:Restriction ;
+   	 						owl:onProperty :latestStepChange ;
+   	 						owl:maxCardinality 1
+   	 				    ],[ a   owl:Restriction ;
+   	 				        owl:onProperty  :assessmentRegime ;
+   	 				        owl:maxCardinality 1
+   	 				    ] ;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    .
+
+:latestComplianceAssessment
+        a                   owl:ObjectProperty;
+	    rdfs:isDefinedBy    bwq-ttl: ;
+        rdfs:label          "latestComplianceAssessment"@en;
+        rdfs:comment        "The latest annual compliance sample assessment associated with a bathing water or sampling point"@en;
+        rdfs:range          :ComplianceAssessment;
+        .
+
+:complianceAssessment
+        a                   owl:ObjectProperty;
+	    rdfs:isDefinedBy    bwq-ttl: ;
+        rdfs:label          "complianceAssessment"@en;
+        rdfs:comment        "An open domained property for associating an annual Compliance Assessment with some thing."@en;
+        rdfs:range          :ComplianceAssessment;
+        .
+ ###############################################################
+#
+# Bathing water quality in-season sample assessment DSD.
+#
+###############################################################
+:sampleDsd
+    a       			qb:DataStructureDefinition ;
+    rdfs:comment 		"A DSD for reporting Bathing Water Quality in-season samples."@en ;
+    rdfs:label			"sampleAssessmentDsd"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+
+    qb:component		
+              [qb:dimension 	:bathingWater  ; qb:order 1 ],
+              [qb:dimension 	:samplingPoint ; qb:order 2 ],
+              [qb:dimension 	:sampleWeek    ; qb:order 3 ],
+              [qb:dimension	    :sampleYear    ; qb:order 4 ],
+
+              [qb:measure		:totalColiformCount],      [qb:attribute :totalColiformQualifier],
+              [qb:measure		:faecalColiformCount],     [qb:attribute :faecalColiformQualifier],
+              [qb:measure		:faecalStreptococciCount], [qb:attribute :faecalStreptococciQualifier],
+              [qb:measure		:entrovirusCount],		   [qb:attribute :entrovirusQualifier],
+              ####################################################
+              ## New counts/qualifiers for RBWD
+              ####################################################
+              [qb:measure     :intestinalEnterococciCount], [qb:attribute :intestinalEnterococciQualifier],
+              [qb:measure     :escherichiaColiCount],       [qb:attribute :escherichiaColiQualifier],
+              ####################################################
+
+              [qb:measure		:salmonellaPresent],
+              [qb:measure 	    :sampleClassification],
+
+              [qb:attribute 	:sampleDateTime],
+              [qb:attribute	    :abnormalWeatherException],
+              [qb:attribute     :recordStatus],
+              [qb:attribute	    :recordDate],
+              ####################################################
+              # Additional Attributes for rBWD discounting 26/11/2014
+              ####################################################
+              [qb:attribute     :discountable],
+              [qb:attribute     :discounted];
+
+      qb:sliceKey			:bySamplingPointKey,
+                            :byWeekKey,
+                            :byYearKey,
+                            :bySamplingPointYearKey;
+        .
+
+###############################################################
+# In-year Sample Slice Keys
+###############################################################
+:bySamplingPointKey
+    a					qb:SliceKey;
+    rdfs:label			"bySamplingPointKey"@en;
+    rdfs:comment		"A Slice Key for grouping samples by sampling point"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    qb:componentProperty
+              :samplingPoint
+    .
+
+:byWeekKey
+    a					qb:SliceKey;
+    rdfs:label			"byWeekKey"@en;
+    rdfs:comment		"A Slice Key for grouping samples by sample week"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    qb:componentProperty
+              :sampleWeek;
+    .
+
+:byYearKey
+    a					qb:SliceKey;
+    rdfs:label			"byYearKey"@en;
+    rdfs:comment		"A Slice Key for grouping samples by sample year"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    qb:componentProperty
+              :sampleYear;
+    .
+
+:bySamplingPointYearKey
+        a                   qb:SliceKey;
+        rdfs:label          "bySamplingPointYearKey"@en;
+        rdfs:comment        "A Slice Key for grouping samples by sampling point and sample year"@en;
+        rdfs:isDefinedBy    bwq-ttl: ;
+        qb:componentProperty
+                            :samplingPoint,:sampleYear;
+        .
+
+###############################################################
+# In-year Sample Slices
+###############################################################
+:SampleDataset
+    a					owl:Class, rdfs:Class;
+    rdfs:subClassOf		qb:Dataset,
+              [ 	a 				owl:Restriction;
+                owl:onProperty	qb:structure;
+                owl:hasValue	:sampleDsd;
+              ];
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:label	"SampleDataset"@en;
+    rdfs:comment "A specialisation of qb:Dataset for In-Year Bathing Water Quality Sample data."@en;
+    .
+
+:BySamplingPointSlice
+    a					owl:Class, rdfs:Class;
+    rdfs:label			"BySamplingPointSlice"@en;
+    rdfs:comment		"A specialised subclass of qb:Slice for bathing water quality sample dataset slices by sampling point."@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:subClassOf		qb:Slice,
+              [	a	owl:Restriction;
+                owl:onProperty		qb:sliceStructure;
+                owl:hasValue		:bySamplingPointKey;
+              ];
+    .
+
+:ByWeekSlice
+    a					owl:Class, rdfs:Class;
+    rdfs:label			"ByWeekSlice"@en;
+    rdfs:comment		"A specialised subclass of qb:Slice for bathing water quality sample dataset slices by the week in which the sample was taken."@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:subClassOf		qb:Slice,
+              [	a	owl:Restriction;
+                owl:onProperty		qb:sliceStructure;
+                owl:hasValue		:byWeekKey;
+              ];
+    .
+
+:ByYearSlice
+    a					owl:Class, rdfs:Class;
+    rdfs:label			"ByYearSlice"@en;
+    rdfs:comment		"A specialised subclass of qb:Slice for bathing water quality sample dataset slices by the year in which the sample was taken."@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:subClassOf		qb:Slice,
+              [	a	owl:Restriction;
+                owl:onProperty		qb:sliceStructure;
+                owl:hasValue		:byYearKey;
+              ];
+    .
+:BySamplingPointYearSlice
+    a					owl:Class, rdfs:Class;
+    rdfs:label			"BySamplingPointYearSlice"@en;
+    rdfs:comment		"A specialised subclass of qb:Slice for bathing water quality sample dataset slices by sampling point and sample year."@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:subClassOf		qb:Slice,
+              [	a	owl:Restriction;
+                owl:onProperty		qb:sliceStructure;
+                owl:hasValue		:bySamplingPointYearKey;
+              ];
+    .
+
+:LatestSampleSlice
+    a					owl:Class, rdfs:Class;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label			"LatestSampleSlice"@en;
+    rdfs:comment		"A category of (key-less) slice for gathering the most recent in season sample assessments"@en;
+    rdfs:subClassOf		qb:Slice;
+    .
+
+
+###############################################################
+# Specialised qb:Observation subclass for Bathing Water Quality Sample Assessments.
+###############################################################
+:SampleAssessment
+    a					owl:Class, rdfs:Class;
+    rdfs:label			"SampleAssessment"@en;
+    rdfs:comment		"Specialised qb:Observation subclass for Bathing Water Quality In-Year Sample Assessments."@en;
+    rdfs:subClassOf		qb:Observation;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    .
+
+:latestSampleAssessment
+        a                   owl:ObjectProperty;
+        rdfs:isDefinedBy    bwq-ttl: ;
+        rdfs:label          "latestSampleAssessment"@en;
+        rdfs:comment        "The latest in-season sample assessment associated with a bathing water or sampling point"@en;
+        rdfs:range          :SampleAssessment;
+        .
+
+###############################################################
+# SampleAssessment and ComplianceAssessment Dimensions.
+###############################################################
+#
+:sampleYear
+    a					qb:DimensionProperty;
+    rdfs:label          "sampleYear"@en;
+    rdfs:comment		"The calendar year for which the sample is representative."@en;
+    rdfs:range			interval:CalendarYear;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    .
+
+#
+:sampleWeek
+    a					qb:DimensionProperty;
+    rdfs:label			"sampleWeek"@en;
+    rdfs:comment        "The calendar week for which the sample is representative."@en;
+    rdfs:range			interval:CalendarWeek;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    .
+
+#
+:samplingPoint
+    a					qb:DimensionProperty;
+    rdfs:label          "samplingPoint"@en;
+    rdfs:comment		"The sampling point where the sample was taken."@en;
+    rdfs:range			loc-bwq:SamplingPoint;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    .
+
+#
+:bathingWater
+    a					qb:DimensionProperty;
+    rdfs:label			"bathingWater"@en;
+    rdfs:comment        "The bathing water from which the sample was taken."@en;
+    rdfs:range			def-bw:BathingWater;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    .
+
+###############################################################
+# BWQ - SampleAssessment measures and attribute
+###############################################################
+
+:recordStatus
+    a					qb:AttributeProperty,owl:ObjectProperty;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:comment		"In-season assessment status."@en;
+    rdfs:label			"recordStatus"@en;
+    rdfs:range			:RecordStatus;
+    .
+
+:recordDate
+    a					qb:AttributeProperty,owl:DatatypeProperty;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:comment		"The Sample Assessment date of record."@en;
+    rdfs:label			"recordDate"@en;
+    rdfs:range			xsd:date;
+    .
+
+:sampleDateTime
+    a 					qb:AttributeProperty;
+    rdfs:label          "sampleDateTime"@en;
+    rdfs:comment		"The date/time at which a sample was taken"@en;
+    rdfs:range			time:Instant;
+#		rdfs:range			xsd:dateTime;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    .
+
+:totalColiformCount
+    a					qb:MeasureProperty;
+    rdfs:label			"totalColiformCount"@en;
+    rdfs:comment		"The total number of colonies of coliform per 100ml water sample."@en;
+    rdfs:range			xsd:integer;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:seeAlso	
+              <http://www.legislation.gov.uk/id/uksi/1991/1597>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/1>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/2>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/3>,
+              <http://www.opsi.gov.uk/legislation/european/directive/1976/0160>;
+    .
+
+:totalColiformQualifier
+    a					qb:AttributeProperty, qb:CodedProperty;
+    rdfs:label			"totalColiformQualifier"@en;
+    rdfs:comment		">, < or actual qualifier for total coliform count"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    qb:codeList			:countQualifier;
+    rdfs:range			:CountQualifier;
+    .
+
+:faecalColiformCount
+    a					qb:MeasureProperty;
+    rdfs:label			"faecalColiformCount"@en;
+    rdfs:comment		"The number of colonies of faecal coliform per 100ml water sample."@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:range			xsd:integer;
+    rdfs:seeAlso    
+              <http://www.legislation.gov.uk/id/uksi/1991/1597>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/1>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/2>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/3>,
+              <http://www.opsi.gov.uk/legislation/european/directive/1976/0160>;    .
+
+:faecalColiformQualifier
+    a					qb:AttributeProperty, qb:CodedProperty;
+    rdfs:label			"faecalColiformQualifier"@en;
+    rdfs:comment		">, < or actual qualifier for faecal coliform count"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    qb:codeList			:countQualifier;
+    rdfs:range			:CountQualifier;
+    .
+
+:faecalStreptococciCount
+    a					qb:MeasureProperty;
+    rdfs:label			"faecalStreptococciCount"@en;
+    rdfs:comment		"The number of colonies of faecal streptococci per 100ml water sample."@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:range			xsd:integer;
+    rdfs:seeAlso    
+              <http://www.legislation.gov.uk/id/uksi/1991/1597>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/1>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/2>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/3>,
+              <http://www.opsi.gov.uk/legislation/european/directive/1976/0160>;    .
+
+:faecalStreptococciQualifier
+    a					qb:AttributeProperty, qb:CodedProperty;
+    rdfs:label			"faecalStreptococciQualifier"@en;
+    rdfs:comment		">, < or actual qualifier for faecal streptococci count"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    qb:codeList			:countQualifier;
+    rdfs:range			:CountQualifier;
+    .
+
+:salmonellaPresent
+    a					qb:MeasureProperty, qb:CodedProperty;
+    rdfs:label			"salmonellaPresent"@en;
+    rdfs:comment		"An indicator of the presence of salmonella a water sample."@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    qb:codeList			:presence;
+    rdfs:range			:Presence;
+    rdfs:seeAlso    
+              <http://www.legislation.gov.uk/id/uksi/1991/1597>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/1>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/2>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/3>,
+              <http://www.opsi.gov.uk/legislation/european/directive/1976/0160>;    .
+
+:entrovirusCount
+    a					qb:MeasureProperty;
+    rdfs:label			"entrovirusCount"@en;
+    rdfs:comment		"The number of colonies of entro virus per 100ml water sample."@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:range			xsd:integer;
+    rdfs:seeAlso    
+              <http://www.legislation.gov.uk/id/uksi/1991/1597>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/1>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/2>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/3>,
+              <http://www.opsi.gov.uk/legislation/european/directive/1976/0160>;    .
+
+:entrovirusQualifier
+    a					qb:AttributeProperty, qb:CodedProperty;
+    rdfs:label			"entrovirusQualifier"@en;
+    rdfs:comment		">, < or actual qualifier for entro virus count"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    qb:codeList			:countQualifier;
+    rdfs:range			:CountQualifier;
+    .
+#########################################################################
+# rBWD sample discounting attributes - added 26/11/2014
+#########################################################################
+:discountable
+    a                   qb:AttributeProperty, owl:DatatypeProperty ;
+    rdfs:label          "discountable"@en ;
+    rdfs:comment        "A boolean valued attribute to indicate that a sample assessment is eligible to be discounted (discountable=true) from annual Compliance Assessments. This attribute is updated throughout the season, and is required to show where a sample meets the criteria to be eligible for discounting. The absence of a value for this attribute indicates that a judgment on whether the sample is discountable is pending. This may occur several days after first publication of sample assessment result."@en;
+    rdfs:range          xsd:boolean ;
+    rdfs:domain         :SampleAssessment ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    .
+
+:discounted
+    a               qb:AttributeProperty, owl:DatatypeProperty ;
+    rdfs:label      "discounted"@en ;
+    rdfs:comment    "An boolean valued attribute on a discountable :SampleAssessment which indicates that it has been discounted (discounted=true) for use in annual Compliance Assessments. This attribute may be present on a discountable sample assessment. It reflects a descision made at the end of the season in which the sample was taken as to whether to actually discount (discounted=true) a discountable sample assessment from annual Compliance Assessments."@en ;
+    rdfs:range      xsd:boolean ;
+    rdfs:domain     :SampleAssessment ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    .
+        
+########################################################################
+# Revised Bathing Water Directive measures.
+########################################################################
+:escherichiaColiCount
+        a                   qb:MeasureProperty;
+        rdfs:label          "escherichiaColiCount"@en;
+        rdfs:comment        "The number of colonies of escherichia coli per 100ml water sample."@en;
+        rdfs:isDefinedBy    bwq-ttl: ;
+        rdfs:range          xsd:integer;
+        rdfs:seeAlso        <http://www.opsi.gov.uk/legislation/european/directive/2006/0007>,
+                            <http://www.legislation.gov.uk/id/uksi/2008/1097>,
+                            <http://www.legislation.gov.uk/id/uksi/2008/1097/schedule/3>,
+                            <http://www.legislation.gov.uk/id/uksi/2008/1097/schedule/3/part/1>;
+        .
+
+:escherichiaColiQualifier
+        a                   qb:AttributeProperty, qb:CodedProperty;
+        rdfs:label          "escherichiaColiQualifier"@en;
+        rdfs:comment        ">, < or actual qualifier for escherichia coli count"@en;
+        rdfs:isDefinedBy    bwq-ttl: ;
+        qb:codeList         :countQualifier;
+        rdfs:range          :CountQualifier;
+        .
+
+:intestinalEnterococciCount
+        a                   qb:MeasureProperty;
+        rdfs:label          "intestinalEnterococciCount"@en;
+        rdfs:comment        "The number of colonies of intestinal enterococci per 100ml water sample."@en;
+        rdfs:isDefinedBy    bwq-ttl: ;
+        rdfs:range          xsd:integer;
+        rdfs:seeAlso        <http://www.opsi.gov.uk/legislation/european/directive/2006/0007>,
+                            <http://www.legislation.gov.uk/id/uksi/2008/1097>,
+                            <http://www.legislation.gov.uk/id/uksi/2008/1097/schedule/3>,
+                            <http://www.legislation.gov.uk/id/uksi/2008/1097/schedule/3/part/1>;
+        .
+
+:intestinalEnterococciQualifier
+        a                   qb:AttributeProperty, qb:CodedProperty;
+        rdfs:label          "entrovirusQualifier"@en;
+        rdfs:comment        ">, < or actual qualifier for intestinal enterococci count"@en;
+        rdfs:isDefinedBy    bwq-ttl: ;
+        qb:codeList         :countQualifier;
+        rdfs:range          :CountQualifier;
+        .
+
+:sampleClassification
+    a					qb:MeasureProperty, qb:CodedProperty;
+    rdfs:label			"sampleClassification"@en;
+    rdfs:comment 		"In season bathing water quality sample assessment"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    qb:codeList			:compliance;
+    rdfs:range			:Compliance;
+    rdfs:seeAlso
+        	  <http://www.legislation.gov.uk/id/uksi/1991/1597>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/1>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/2>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/3>,
+              <http://www.opsi.gov.uk/legislation/european/directive/1976/0160>;
+    .
+
+
+:abnormalWeatherException
+    a				qb:AttributeProperty;
+#    dcterms:source	<http://www.environment-agency.gov.uk/homeandleisure/119855.aspx>;
+    dcterms:source  <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/1/paragraph/2> ;
+    rdfs:label		"abnormalWeatherException"@en;
+    rdfs:comment	"""Article 5 of the EC Bathing Water Directive (76/160/EEC) allows the Environment Agency to disregard results that exceed the bathing water standards if they were affected by floods, other natural disasters or abnormal weather conditions.
+
+This applies to both the mandatory and guideline bathing water quality standards.
+
+Our monitoring policy requires us to take bathing water samples according to a pre-determined timetable. We don't avoid taking samples because there is a forecast of wet weather. If it subsequently happens that there is a mandatory exceedence and the sample was affected by abnormally wet weather, flooding or natural disaster, we will make an application for a waiver.  If the application is successful the sample result will be disregarded when we assess compliance but it will not be removed from our public register.
+
+Our policy for waiving bathing water results as a result of abnormal weather conditions has been agreed with Defra.
+
+Abnormal weather for the purposes of the Bathing Water Directive is defined as a storm event with return period of at least 1 in 5 years. A storm event will usually have occurred between 1 to 48 hours before the sample was taken (exceptionally upto 72 hours for larger catchments). We use rainfall data from rain-gauges that are representative of the bathing water catchment and approved by the Met Office.  We then use this data to make an assessment based on the 1 in 5 year criteria.
+
+The sample results displayed in the 'What's in your Backyard' section of our website only hold the results used to assess Bathing Water Directive compliance. When a waiver is granted the result is removed from this site but is still  available to the public through our public register."""@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:range	xsd:boolean;
+    .
+
+###############################################################
+#
+# SKOS ConceptScheme for SampleAssessment record status
+#
+###############################################################
+:RecordStatus
+    a					owl:Class;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:comment		"A class of sample assessment record status codes"@en;
+    rdfs:label			"RecordStatus"@en;
+    .
+
+:record-status
+    a					skos:ConceptScheme;
+    rdfs:label			"record-status concept scheme"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:comment 		"A skos:ConceptScheme indicating the status of in-season sample assessment records."@en;
+    skos:hasTopConcept	:new, :withdrawal, :replacement;
+    .
+
+:new	a					:RecordStatus,skos:Concept;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:comment		"A status code for marking new sample assessments."@en;
+    rdfs:label			"new"@en;
+    skos:prefLabel		"new"@en;
+    .
+
+:withdrawal
+    a					:RecordStatus,skos:Concept;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:comment		"A status code for marking an assessments that withdraw an earlier assessment"@en;
+    rdfs:label			"withdrawal"@en;
+    skos:prefLabel		"withdrawal"@en;
+    .
+
+:replacement
+    a					:RecordStatus,skos:Concept;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:comment		"A status code for marking a sample assessments that replace an earlier assessment."@en;
+    rdfs:label			"replacement"@en;
+    skos:prefLabel		"replacement"@en;
+    .
+
+###############################################################
+#
+# SKOS ConceptScheme for moreThan/lessThan count qualifiers.
+#
+###############################################################
+:countQualifier
+    a					skos:ConceptScheme;
+    rdfs:label	 		"count qualifier codeset concept scheme"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:comment 		"A skos:ConceptScheme for count qualifier code points. Count qualifier codes indicate whether an actual count or upper/lower bounds to detection are being reported."@en;
+    skos:hasTopConcept	:moreThan, :lessThan, :actual;
+    .
+
+# Class for count qualifier codepoints.
+:CountQualifier
+    a					owl:Class, rdfs:Class;
+    rdfs:label			"count qualifier code (Class)"@en;
+    rdfs:subClassOf		skos:Concept;
+    rdfs:comment		"An owl:Class, rdfs:Class for count qualifier code points"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    .
+
+# A datatype for count qualifier notation literal values.
+:countQualifierCode
+    a					rdfs:Datatype;
+    rdfs:label			"count qualifier code notation datatype"@en;
+    rdfs:comment		"A datatype for count qualifier notation literal values."@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+        .
+
+# A skos:notation sub-property for signifying count qualifier notation datatyped values.
+:countQualifierNotation
+    a					rdf:Property;
+    rdfs:label          "countQualifierNotation"@en;
+    rdfs:comment		"A skos:notation sub-property for signifying count qualifier notation datatyped values."@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:subPropertyOf	skos:notation;
+    rdfs:range			:countQualifierCode;
+    .
+
+:moreThan
+    a					:CountQualifier, skos:Concept;
+    skos:prefLabel		"more-than"@en;
+    rdfs:label			"more-than"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    skos:inScheme		:countQualifier;
+    skos:topConceptOf	:countQualifier;
+    :countQualifierNotation	">"^^:countQualifierCode;
+    skos:notation			">"^^:countQualifierCode;
+    skos:definition			"'>' Indicates that the actual count value is more than the value given; that it exceeds a detection/measurement upper bound."@en;
+    .
+
+:lessThan
+    a					:CountQualifier, skos:Concept;
+    skos:prefLabel		"less-than"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:label			"less-than"@en;
+    skos:inScheme		:countQualifier;
+    skos:topConceptOf	:countQualifier;
+    :countQualifierNotation	"<"^^:countQualifierCode;
+    skos:notation			"<"^^:countQualifierCode;
+    skos:definition			"'<' Indicates that the actual count value is less than the value given; that it is less than a detection/measurement lower bound."@en;
+    .
+
+
+:actual
+    a					:CountQualifier, skos:Concept;
+    skos:prefLabel		"actual"@en;
+    rdfs:label			"actual"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    skos:inScheme		:countQualifier;
+    skos:topConceptOf	:countQualifier;
+    :countQualifierNotation
+              "="^^:countQualifierCode;
+    skos:notation		"="^^:countQualifierCode;
+    skos:definition		"'=' indicates that the actual count value is as given."@en;
+    .
+
+###############################################################
+#
+# SKOS ConceptScheme Detected, Undetected and Not Assessed indication of presense.
+#
+###############################################################
+# Codeset Class;
+:Presence
+    a					owl:Class, rdfs:Class;
+    rdfs:subClassOf		skos:Concept;
+    rdfs:label			"Presence indicator code (Class)"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:comment		"A distinguished subClass of skos:Concept for presence code points."@en;
+    .
+
+#Codeset ConceptScheme
+:presence
+    a					skos:ConceptScheme;
+    rdfs:label			"Presence indicator codeset concept scheme)"@en;
+    rdfs:comment		"A skos:ConceptScheme for the :Presence code points. :Presence code points indicated the presence of some characteristic detected during an assessment process."@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    skos:hasTopConcept	:present, :not-present, :not-assessed;
+    .
+
+#Codeset distinguished Notation Datatype
+:presenceCode
+    a					rdfs:Datatype;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:label          "presence code notation datatype"@en;
+     rdfs:comment		"A datatype for presence indicator notation literal values."@en;
+     .
+
+#Distinguished skos:notation subproperty
+:presenceNotation
+    a					rdf:Property;
+    rdfs:subClassOf		skos:notation;
+    rdfs:label          "presenceNotation"@en;
+    rdfs:comment		"A skos:notation sub-property for signifying presence indication notation datatyped values."@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:range			:presenceCode;
+    .
+
+#Codepoint
+:present
+    a					:Presence, skos:Concept;
+    skos:prefLabel		"present"@en;
+    rdfs:label			"present"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    skos:definition		"A coded property value to indicate that an assessement has detected the presence of some characteristic."@en;
+    :presenceNotation	"P"^^:presenceCode;
+    skos:notation		"P"^^:presenceCode;
+    skos:inScheme		:presence;
+    skos:topConceptOf	:presence;
+    .
+
+#Codepoint
+:not-present
+    a					:Presence, skos:Concept;
+    skos:prefLabel		"not-present"@en;
+    rdfs:label			"not-present"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    skos:definition		"A coded property value to indicate that an assessement has not detected the presence of some characteristic."@en;
+    :presenceNotation	"N"^^:presenceCode;
+    skos:notation		"N"^^:presenceCode;
+    skos:inScheme		:presence;
+    skos:topConceptOf	:presence;
+    .
+
+#Codepoint
+:not-assessed	a				:Presence, skos:Concept;
+    skos:prefLabel		"not-assessed"@en;
+    rdfs:label			"not-assessed"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    skos:definition		"A coded property value to indicate that an assessment of the presense of some characteristic has not been made."@en;
+    :presenceNotation	"n/a"^^:presenceCode;
+    skos:notation		"n/a"^^:presenceCode;
+    skos:inScheme		:presence;
+    skos:topConceptOf	:presence;
+    .
+
+###############################################################
+#
+# A SKOS ConceptScheme for bathing water compliance classification codes.
+#
+###############################################################
+:compliance	a	skos:ConceptScheme;
+    rdfs:label			"compliance classification codeset concept scheme"@en;
+    rdfs:comment		"A collection of Bathing Water Compliance Classification codes"@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    skos:note			" A SKOS ConceptScheme for bathing water compliance classification codes.";
+    skos:hasTopConcept	:C, :F, :G, :I, :N;
+    rdfs:seeAlso
+              <http://www.legislation.gov.uk/id/uksi/1991/1597>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/1>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/2>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/3>,
+              <http://www.opsi.gov.uk/legislation/european/directive/1976/0160>;
+    .
+
+# A subclass of skos:Concept to collect all instances of bathing water compliance codes.
+:Compliance	a			owl:Class, rdfs:Class;
+    rdfs:label			"Compliance classification code (Class)"@en;
+    rdfs:comment		"A subclass of skos:Concept to collect all instances of bathing water compliance codes."@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    rdfs:subClassOf		skos:Concept;
+    rdfs:seeAlso
+              <http://www.legislation.gov.uk/id/uksi/1991/1597>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/1>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/2>,
+              <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/3>,
+              <http://www.opsi.gov.uk/legislation/european/directive/1976/0160>;    .
+
+# A datatype for typing bwq compliance code skos:notations.
+:complianceCode
+    a 					rdfs:Datatype;
+    rdfs:label			"compliance classification code datatype"@en;
+    rdfs:comment		"A datatype for typing bwq compliance code skos:notations."@en;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    .
+
+# A specialisation of skos:notation for bwq compliance code notations
+:complianceCodeNotation	a				rdf:Property;
+        rdfs:label          "complianceCodeNotation"@en;
+    rdfs:subPropertyOf	skos:notation;
+    rdfs:range			:complianceCode;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    .
+##########################################################################
+# Thresholds for Compliance Categories
+##########################################################################
+:Threshold
+    a                   owl:Class ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label          "Threshold"@en ;
+    rdfs:comment        "A class for associating upper or lower limit and percentile with a :Compliance classification, a category of bathing water and type for measurement"@en ;
+    rdfs:subClassOf
+        [ a owl:Restriction ;
+          owl:onProperty :limit ;
+          owl:cardinality 1;
+        ],[ a owl:Restriction ;
+          owl:onProperty :percentile ;
+          owl:cardinality 1;
+        ],[
+          a owl:Restriction ;
+          owl:onProperty :waterType ;
+          owl:cardinality 1;
+        ],[
+          a owl:Restriction ;
+          owl:onProperty :measure ;
+          owl:cardinality 1;
+        ],[
+          a owl:Restriction ;
+          owl:onProperty :classification ;
+          owl:cardinality 1;
+        ]
+        .
+:UpperThreshold
+     a              owl:Class;
+    rdfs:isDefinedBy    bwq-ttl: ;
+     rdfs:label     "UpperThreshold"@en;
+     rdfs:comment   "A class for associating an upper limit and percentile  with a :Compliance classification, a category of bathing water and type for measurement"@en ;
+     rdfs:subClassOf :Threshold;
+     .
+
+:LowerThreshold
+     a              owl:Class;
+    rdfs:isDefinedBy    bwq-ttl: ;
+     rdfs:label     "LowerThreshold"@en;
+     rdfs:comment   "A class for associating a lower limit and percentile with a :Compliance classification, a category of bathing water and type for measurement"@en ;
+     .
+
+:waterType
+    a               owl:ObjectProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label      "waterType"@en ;
+    rdfs:comment    "A property for referencing the class of bathing water associated with a classification :Threshold"@en ;
+    rdfs:range      owl:Class ;
+    rdfs:domain     :Threshold ;
+    .
+    
+:limit
+    a               owl:DatatypeProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label      "limit"@en;
+    rdfs:comment    "A property for expressing the limiting value of a classification :Threshold"@en;
+    rdfs:range      xsd:integer;
+    .
+
+:percentile
+    a               owl:DatatypeProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label      "percentile"@en;
+    rdfs:comment    "A property for expressing the percentage of samples that need to satisfy a :Threshold limit for a given :Compliance classification"@en;
+    rdfs:range      xsd:decimal;
+    .
+
+:measure
+    a               owl:ObjectProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label      "measure"@en ;
+    rdfs:comment    "A property for associating a thresholded measure with a classification :Threshold";
+    rdfs:range      qb:MeasureProperty ;
+    .
+
+:classification
+    a               owl:ObjectProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label      "classification"@en ;
+    rdfs:comment    "A property for associating a :Compliance classification with a classification :Threshold"@en ;
+    rdfs:range      :Compliance ;
+    .
+
+:thresholds
+    a               owl:ObjectProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+    rdfs:label      "thresholds"@en ;
+    rdfs:comment    "A property for associating one or more :Thresholds with a :Compliance category"@en ;
+    rdfs:range      :Threshold ;
+    rdfs:domain     :Compliance ;
+    .
+##########################################################################
+# Bathing Water Directive Compliance categories.
+##########################################################################
+# SKOS Concept used as code-point to classify a bathing water as excellent.
+:G      a           :Compliance, skos:Concept;
+        rdfs:isDefinedBy    bwq-ttl: ;
+        skos:inScheme       :compliance;
+        skos:topConceptOf   :compliance;
+        skos:definition
+"""Bathing water quality compliance classification for use in bathing water quality reporting under the Bathing Water Directive - cBWD (76/0160/EEC)
+
+For annual assessments \"Higher\" means the bathing water meets the criteria for the stricter UK guideline standards of the cBWD Directive (78/0160/EEC) (includes lower levels of concentrations and a third parameter (FS)).
+
+Sample limits used are:
+
+\"Higher\":      TC: ≤500;   FC: ≤100;  FS: ≤100.
+\"Minimum\":     TC: ≤10000; FC: ≤2000; FS: N/A.
+\"Fail\":        TC: >10000; FC: >2000; FS: N/A.
+
+TC= Total Coliforms, FC = Faecal Coliforms, FS = Faecal Streptococci.
+
+All numeric limits are cfu/100ml"""@en;
+
+#        rdfs:label          "Excellent"@en;
+#        rdfs:label          "Rhagorol"@cy;
+#        skos:prefLabel      "Excellent"@en;
+#        skos:prefLabel      "Rhagorol"@cy;
+        rdfs:label          "Higher"@en;
+        rdfs:label          "Uchaf"@cy;
+        skos:prefLabel      "Higher"@en;
+        skos:prefLabel      "Uchaf"@cy;
+        :complianceCodeNotation     "G"^^:complianceCode;
+        skos:notation               "G"^^:complianceCode;
+        skos:notation               "G";
+        dcterms:source      <http://www.legislation.gov.uk/id/uksi/1991/1597>;
+        rdfs:seeAlso        <http://www.legislation.gov.uk/id/uksi/1991/1597>,
+                            <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/1>,
+                            <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/2>,
+                            <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/3>,
+                            <http://www.opsi.gov.uk/legislation/european/directive/1976/0160>;
+        .
+
+# SKOS Concept used as code-point to classify a bathing water as good.
+:I      a           :Compliance, skos:Concept;
+        rdfs:isDefinedBy    bwq-ttl: ;
+        skos:inScheme       :compliance;
+        skos:topConceptOf   :compliance;
+        skos:definition
+"""Bathing water quality compliance classification for use in bathing water quality reporting under the Bathing Water Directive - cBWD (76/0160/EEC)
+
+For annual assessments \"Minimum\" means that at least 95% of the samples meet the mandatory standards of the cBWD Directive (76/0160/EEC).
+
+Sample limits used are:
+
+\"Higher\":      TC: ≤500;   FC: ≤100;  FS: ≤100.
+\"Minimum\":     TC: ≤10000; FC: ≤2000; FS: N/A.
+\"Fail\":        TC: >10000; FC: >2000; FS: N/A.
+
+TC= Total Coliforms, FC = Faecal Coliforms, FS = Faecal Streptococci.
+
+All numeric limits are cfu/100ml"""@en;
+
+#        rdfs:label          "Good"@en;
+#        rdfs:label          "Da"@cy;
+#        skos:prefLabel      "Good"@en;
+#        skos:prefLabel      "Da"@cy;
+        rdfs:label          "Minimum"@en;
+        rdfs:label          "Isafswm"@cy;
+        skos:prefLabel      "Minimum"@en;
+        skos:prefLabel      "Isafswm"@cy;
+        :complianceCodeNotation     "I"^^:complianceCode;
+        skos:notation               "I"^^:complianceCode;
+        skos:notation               "I";
+        dcterms:source      <http://www.legislation.gov.uk/id/uksi/1991/1597>;
+        rdfs:seeAlso        <http://www.legislation.gov.uk/id/uksi/1991/1597>,
+                            <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/1>,
+                            <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/2>,
+                            <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/3>,
+                            <http://www.opsi.gov.uk/legislation/european/directive/1976/0160>;        .
+
+
+# SKOS Concept used as code-point to classify a bathing water as poor.
+:F      a                   :Compliance, skos:Concept;
+        rdfs:isDefinedBy    bwq-ttl: ;
+        skos:inScheme       :compliance;
+        skos:topConceptOf   :compliance;
+        skos:definition
+"""Bathing water quality compliance classification for use in bathing water quality reporting under the Bathing Water Directive - cBWD (76/0160/EEC)
+
+For annual assessments \"Fail\" means that fewer than 95% of the samples meet the required mandatory standards of the cBWD Directive (76/0160/EEC).
+
+Sample limits used are:
+
+\"Higher\":      TC: ≤500;   FC: ≤100;  FS: ≤100.
+\"Minimum\":     TC: ≤10000; FC: ≤2000; FS: N/A.
+\"Fail\":        TC: >10000; FC: >2000; FS: N/A.
+
+TC= Total Coliforms, FC = Faecal Coliforms, FS = Faecal Streptococci.
+
+All numeric limits are cfu/100ml"""@en;
+
+#        skos:prefLabel      "Poor"@en;
+#        skos:prefLabel      "Gwan"@cy;
+#        rdfs:label          "Poor"@en;
+#        rdfs:label          "Gwan"@cy;
+        skos:prefLabel      "Fail"@en;
+        skos:prefLabel      "Methu"@cy;
+        rdfs:label          "Fail"@en;
+        rdfs:label          "Methu"@cy;
+        :complianceCodeNotation     "F"^^:complianceCode;
+        skos:notation               "F"^^:complianceCode;
+        skos:notation               "F";
+        dcterms:source      <http://www.legislation.gov.uk/id/uksi/1991/1597>;
+        rdfs:seeAlso        <http://www.legislation.gov.uk/id/uksi/1991/1597>,
+                            <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/1>,
+                            <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/2>,
+                            <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/3>,
+                            <http://www.opsi.gov.uk/legislation/european/directive/1976/0160>;        .
+
+# SKOS Concept used as code-point to classify a bathing water as closed.
+:C		a			:Compliance, skos:Concept;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    skos:inScheme		:compliance;
+    skos:topConceptOf	:compliance;
+    skos:definition     "Indicates that the bathing water was closed during the bathing season."@en;
+    rdfs:label          "Closed"@en;
+    rdfs:label          "Ar gau"@cy;
+    skos:prefLabel      "Closed"@en;
+    skos:prefLabel      "Ar gau"@cy;
+    :complianceCodeNotation		"C"^^:complianceCode;
+    skos:notation				"C"^^:complianceCode;
+        skos:notation               "C";
+        dcterms:source      <http://www.legislation.gov.uk/id/uksi/1991/1597>;
+        rdfs:seeAlso        <http://www.legislation.gov.uk/id/uksi/1991/1597>,
+                            <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/1>,
+                            <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/2>,
+                            <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/3>,
+                            <http://www.opsi.gov.uk/legislation/european/directive/1976/0160>;        .
+
+# SKOS Concept used as code-point to classify a bathing water as not classified (sic).
+:N		a			        :Compliance, skos:Concept;
+    rdfs:isDefinedBy	bwq-ttl: ;
+    skos:inScheme		:compliance;
+    skos:topConceptOf	:compliance;
+    skos:definition	    "Indicates that the bathing water was not classified during the bathing season."@en;
+    rdfs:label		    "Not Classified"@en;
+    rdfs:label		    "Heb ei Ddosbarthu"@cy;
+    skos:prefLabel	    "Not Classified"@en;
+    skos:prefLabel	    "Heb ei Ddosbarthu"@cy;
+    :complianceCodeNotation		"N"^^:complianceCode;
+    skos:notation				"N"^^:complianceCode;
+    skos:notation               "N";
+        dcterms:source      <http://www.legislation.gov.uk/id/uksi/1991/1597>;
+        rdfs:seeAlso        <http://www.legislation.gov.uk/id/uksi/1991/1597>,
+                            <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/1>,
+                            <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/2>,
+                            <http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/3>,
+                            <http://www.opsi.gov.uk/legislation/european/directive/1976/0160>;
+        .
+
+#########################################################################
+# StepChange
+#########################################################################
+:StepChange
+	a					owl:Class;
+    rdfs:isDefinedBy    bwq-ttl: ;
+	rdfs:label			"StepChange"@en;
+	skos:prefLabel		"StepChange"@en;
+	rdfs:comment		"A class of Step Change events, generally improvements that mark a step change water quality such that it is no longer appropriate to include samples taken prior to the step change in on-going annual compliance assessments"@en;
+	rdfs:subClassOf [
+		a		owl:Restriction ;
+		owl:onProperty	rdfs:comment ;
+		owl:minCardinality 0
+	],[
+		a		owl:Restriction ;
+		owl:onProperty	def-bw:bathingWater ;
+		owl:minCardinality 1;
+	]
+	.
+
+:dateOfChange
+	a					owl:DatatypeProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+	rdfs:label			"dateOfChange"@en;
+	skos:prefLabel		"dateOfChange"@en;
+	rdfs:comment		"A property that conveys the date of a :StepChange";
+	rdfs:range			xsd:date ;
+	rdfs:domain			:StepChange 
+	.
+
+:stepChange
+	a					owl:ObjectProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+	rdfs:label			"stepChange"@en;
+	skos:prefLabel		"stepChange"@en;
+	rdfs:comment		"An open-domained property for making general reference to a :StepChange"@en;
+	rdfs:range			:StepChange ;
+	.
+
+:latestStepChange
+	a					owl:ObjectProperty ;
+    rdfs:isDefinedBy    bwq-ttl: ;
+	rdfs:label			"latestStepChange"@en;
+	skos:prefLabel		"latestStepChange"@en;
+	rdfs:comment		"An open-domained property referencing the most recent relevant :StepChange typically associated with a :BathingWater or a :ComplianceAssessment. In the case of a :ComplianceAssessment, the reference is to the most recent :StepChange within the time interval covered by the assessment."@en;
+	rdfs:range			:StepChange ;
+	.
+
+	
+#########################################################################
+# Vestigial legislation reference data
+#########################################################################
+<http://www.opsi.gov.uk/legislation/european/directive/1976/0160>
+  rdfs:label	"EC Bathing Water Directive (76/160/EEC)"@en;
+  dcterms:title  """COUNCIL DIRECTIVE
+of 8 December 1975
+concerning the quality of bathing water
+(76/160/EEC)"""@en;
+  .
+
+<http://www.opsi.gov.uk/legislation/european/directive/2006/0007>
+    rdfs:label  "EC Revised Bathing Water Directive (2006/7/EC)"@en;
+    dcterms:title   """DIRECTIVE 2006/7/EC OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL
+of 15 February 2006
+concerning the management of bathing water quality and repealing Directive 76/160/EEC"""@en;
+    .
+
+<http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/1/paragraph/2>
+    rdfs:label "The Bathing Waters (Classification) Regulations 1991 Schedule 1 Paragraph 2"@en;
+    .
+#<http://www.environment-agency.gov.uk/homeandleisure/119855.aspx>
+#  rdfs:label "Environment Agency on Abnormal Weather Exceptions"@en
+#  .
+
+<http://www.legislation.gov.uk/id/uksi/1991/1597>
+  rdfs:label "The Bathing Waters (Classification) Regulations 1991"@en
+  .
+
+<http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/1>
+    rdfs:label  "CRITERIA FOR CLASSIFICATION BW1"@en;
+        .
+
+<http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/2>
+    rdfs:label  "SAMPLING REQUIREMENTS"@en;
+        .
+
+<http://www.legislation.gov.uk/id/uksi/1991/1597/schedule/3>
+    rdfs:label  "QUALITY AND ADDITIONAL SAMPLING REQUIREMENTS"@en;
+        .
+<http://www.legislation.gov.uk/id/uksi/2003/1238>
+    rdfs:label  "The Bathing Waters (Classification) (England) Regulations 2003"@en ;
+    .
+
+<http://www.legislation.gov.uk/id/uksi/2008/1097>
+    rdfs:label  "The Bathing Water Regulations 2008"@en ;
+    .
+
+<http://www.legislation.gov.uk/id/uksi/2014/2363>
+        rdfs:label  "The Bathing Water (Amendment) (England) Regulations 2014"@en;
+        .
+<http://www.legislation.gov.uk/id/wsi/2014/1067>
+        rdfs:label  "The Bathing Water (Amendment) (Wales) Regulations 2014"@en ,
+                    "Rheoliadau Dyfroedd Ymdrochi (Diwygio) (Cymru) 2014"@cy ;
+        .

@@ -63,7 +63,7 @@
         </p>
         {% if wind_speed_int > 19 %}<p class="text-danger">Wind speeds in excess of 20 MPH today - take care!</p>
         {% elif wind_speed_int > 14 and wind_speed_int < 20 %}<p class="text-danger">Today is looking fairly windy</p>
-        {% elif wind_speed_int > 9 and wind_speed_int < 15 %}<p class="text-success">Today is looking a little </p>
+        {% elif wind_speed_int > 9 and wind_speed_int < 15 %}<p class="text-success">Today is looking a little windy</p>
         {% else %}<p class="text-success">Today is looking calm, no strong winds</p>{% endif %}
 
         {% if weather_info[0] == "North East" or "North" or "North West" %}<p class="text-success">Today's wind is mostly North facing</p>
@@ -80,10 +80,16 @@
                         Latest Risk Prediction
                     </th>
                     <th>
-                        Heavy Rain - Risk of Pollution Warnings
+                        Risk Prediction Expiry Date
                     </th>
                     <th>
-                        Latest Water Quality Classifcation {{ pollution.latest_compliance_date}}
+                        Latest Annual Classifcation from {{ pollution.latest_compliance_date}}
+                    </th>
+                    <th>
+                        Latest Water Sample taken {{ pollution.latest_sample_date}}
+                    </th>
+                    <th>
+                        Heavy Rain Impacting Water Quality Warning? 
                     </th>
                 </tr>
                 <tr>
@@ -91,12 +97,25 @@
                         {{ pollution.risk_prediction}}
                     </td>
                     <td>
-                        {{ pollution.heavy_rain_warning}}
+                        {{ pollution.risk_prediction_expiry }}
                     </td>
                     <td>
                         {{ pollution.latest_compliance_assessment}}
                     </td>
+                    <th>
+                        {{ pollution.latest_sample_classification}}
+                    </th>
+                    <td>
+                        {% if pollution.heavy_rain_warning == true %}
+                            <b>YES - WARNING IN PLACE</b>
+                        {% else %}
+                            No
+                        {% endif %}
+                    </td>
                 </tr>
             </table>
+        <p>
+            More information on this water quality data can be found at the <a href="https://environment.data.gov.uk/bwq/profiles/help-understanding-data.html">Environment Agency's website</a>
+        </p>
         </p>
 {% endblock %}
