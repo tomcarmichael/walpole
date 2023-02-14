@@ -114,8 +114,8 @@
             </tr>
             <tr>
                 <td>
-                    {% if pollution.risk_prediction != normal %}
-                        <img src="/static/images/green_tick_small.jpeg" alt="warning">
+                    {% if pollution.risk_prediction == "normal" %}
+                        <img src="/static/images/green_tick_small.jpeg" alt="safe">
                     {% else %}
                         <img src="/static/images/red_cross_small.jpeg" alt="warning">
                     {% endif %}
@@ -127,10 +127,10 @@
                 <td>
                 </td>
                 <td>
-                    {% if pollution.heavy_rain_warninge %}
-                        <img src="/static/images/red_cross_small.jpeg" alt="warning">
+                    {% if pollution.heavy_rain_warning == "No"  %}
+                        <img src="/static/images/green_tick_small.jpeg" alt="safe">
                     {% else %}
-                        <img src="/static/images/green_tick_small.jpeg" alt="warning">
+                        <img src="/static/images/red_cross_small.jpeg" alt="warning">
                     {% endif %}
                 </td>
             </tr>
