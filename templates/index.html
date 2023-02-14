@@ -7,23 +7,25 @@
 {% block main %}
 
         <h1>Today's Conditions</h1>
-        <table class="table">
-            <tr>
-                {% for time in weather_info[0][0] %}
-                    <th>{{ time }}</th>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for temp in weather_info[0][3] %}
-                    <td>{{ temp }}°C</td>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for symbol in weather_info[0][2] %}
-                    <td><img src="/static/images/symbols/{{ symbol }}.png" alt="weather symbol"></td>
-                {% endfor %}
-            </tr>
-        </table>
+        <div class="table-responsive py-4">
+            <table class="table table-striped table-sm">
+                <tr>
+                    {% for time in weather_info[0][0] %}
+                        <th>{{ time }}</th>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for temp in weather_info[0][3] %}
+                        <td>{{ temp }}°C</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for symbol in weather_info[0][2] %}
+                        <td><img src="/static/images/symbols/{{ symbol }}.png" alt="weather symbol"></td>
+                    {% endfor %}
+                </tr>
+            </table>
+        </div>
         <table class="table">
             <tr>
                 <th>Sunrise</th>
@@ -37,7 +39,7 @@
         
 
         <P>
-            <table class="table">
+            <table class="table table-striped">
                 <tr>
                     {% for tide in tides %}
                         <th>{{ tide.EventType }}</th>
@@ -74,7 +76,7 @@
         </p>
 
         <p>
-            <table class="table">
+            <table class="table table-striped">
                 <tr>
                     <th>
                         Latest Risk Prediction

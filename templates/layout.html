@@ -14,7 +14,7 @@
          -->
         <link rel="stylesheet" href="/static/custom.css">
         <script src="/static/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <title>Walpole Bay Tidal Pool Community Resource Site{% block title %}{% endblock %}</title>
+        <title>Walpole Bay Tidal Pool | Community Resource Site |{% block title %}{% endblock %}</title>
 
     </head>
 
@@ -27,25 +27,15 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbar">
-                    {% if session["user_id"] %}
-                        <ul class="navbar-nav me-auto mt-2">
-                            <li class="nav-item"><a class="nav-link" href="/quote">Report conditions</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/quote">Forum</a></li>
-                        </ul>
-                        <ul class="navbar-nav ms-auto mt-2">
-                            <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
-                        </ul>
-                    {% else %}
                         <ul class="navbar-nav ms-auto mt-2">
                             <li class="nav-item"><a {% if request.path == '/' %}class="nav-link active"{% else %}class="nav-link"{% endif %} href="/">Conditions</a></li>
                             <li class="nav-item"><a {% if request.path == '/resources' %}class="nav-link active"{% else %}class="nav-link"{% endif %} href="/resources">Resources</a></li>
                         </ul>
-                    {% endif %}
                 </div>
             </div>
         </nav>
 
-        <main class="container-fluid py-5 text-center">
+        <main class="container-fluid py-4 text-center">
             {% block main %}{% endblock %}
         </main>
 
