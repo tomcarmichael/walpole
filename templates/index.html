@@ -7,7 +7,7 @@
 {% block main %}
 
         <h1>Today's Conditions</h1>
-        <div class="table-responsive py-4">
+        <div class="table-responsive pt-4">
             <table class="table table-striped table-sm">
                 <tr>
                     {% for time in weather_info[0][0] %}
@@ -26,7 +26,7 @@
                 </tr>
             </table>
         </div>
-        <table class="table">
+        <table class="table table-striped">
             <tr>
                 <th>Sunrise</th>
                 <th>Sunset</th>
@@ -47,7 +47,7 @@
                 </tr>
                 <tr>
                     {% for tide in tides %}
-                        <th>{{ tide.Time }}</th>
+                        <td>{{ tide.Time }}</td>
                     {% endfor %}
                 </tr>
                 <tr>
@@ -63,6 +63,7 @@
                 </tr>
             </table>
         </p>
+        
         {% if wind_speed_int > 19 %}<p class="text-danger">Wind speeds in excess of 20 MPH today - take care as water will be choppy, especially if wind is South facing!</p>
         {% elif wind_speed_int > 14 and wind_speed_int < 20 %}<p class="text-danger">Winds over 15mph - expect moderately choppy waters, especially if South facing</p>
         {% elif wind_speed_int > 9 and wind_speed_int < 15 %}<p class="text-warning">Winds over 10mph might make for mildly choppy waters, especially if South facing</p>
@@ -71,73 +72,74 @@
         {% if weather_info[0] == "North East" or "North" or "North West" %}<p class="text-success">Today's wind is mostly North facing</p>
         {% elif weather_info[0]  == "East" or "West" %}<p class="text-warning">Today's wind is mostly perpendicular to the Tidal Pool</p>
         {% else %}<p class="text-warning">Today's wind is mostly South facing (towards the coastline)</p>{% endif %}
+
+        <table class="table table-striped">
+            <tr>
+                <th>
+                    Latest Risk Prediction
+                </th>
+                <th>
+                    Risk Prediction Expiry Date
+                </th>
+                <th>
+                    Latest Annual Classifcation from {{ pollution.latest_compliance_date}}
+                </th>
+                <th>
+                    Latest Water Sample taken {{ pollution.latest_sample_date}}
+                </th>
+                <th>
+                    Heavy Rain Impacting Water Quality Warning? 
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    <b>{{ pollution.risk_prediction}}</b>
+                </td>
+                <td>
+                    {{ pollution.risk_prediction_expiry }}
+                </td>
+                <td>
+                    <b>{{ pollution.latest_compliance_assessment}}</b>
+                </td>
+                <td>
+                    {{ pollution.latest_sample_classification}}
+                </td>
+                <td>
+                    {% if pollution.heavy_rain_warning %}
+                        <b>YES - WARNING IN PLACE</b>
+                    {% else %}
+                        <b>No</b>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {% if pollution.risk_prediction != normal %}
+                        <img src="/static/images/green_tick_small.jpeg" alt="warning">
+                    {% else %}
+                        <img src="/static/images/red_cross_small.jpeg" alt="warning">
+                    {% endif %}
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                    {% if pollution.heavy_rain_warninge %}
+                        <img src="/static/images/red_cross_small.jpeg" alt="warning">
+                    {% else %}
+                        <img src="/static/images/green_tick_small.jpeg" alt="warning">
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+        
         <p>
             <img src="{{ wind_plot }}"/>
         </p>
 
-        <p>
-            <table class="table table-striped">
-                <tr>
-                    <th>
-                        Latest Risk Prediction
-                    </th>
-                    <th>
-                        Risk Prediction Expiry Date
-                    </th>
-                    <th>
-                        Latest Annual Classifcation from {{ pollution.latest_compliance_date}}
-                    </th>
-                    <th>
-                        Latest Water Sample taken {{ pollution.latest_sample_date}}
-                    </th>
-                    <th>
-                        Heavy Rain Impacting Water Quality Warning? 
-                    </th>
-                </tr>
-                <tr>
-                    <td>
-                        <b>{{ pollution.risk_prediction}}</b>
-                    </td>
-                    <td>
-                        {{ pollution.risk_prediction_expiry }}
-                    </td>
-                    <td>
-                        <b>{{ pollution.latest_compliance_assessment}}</b>
-                    </td>
-                    <td>
-                        {{ pollution.latest_sample_classification}}
-                    </td>
-                    <td>
-                        {% if pollution.heavy_rain_warning %}
-                            <b>YES - WARNING IN PLACE</b>
-                        {% else %}
-                            <b>No</b>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        {% if pollution.risk_prediction != normal %}
-                            <img src="/static/images/green_tick_small.jpeg" alt="warning">
-                        {% else %}
-                            <img src="/static/images/red_cross_small.jpeg" alt="warning">
-                        {% endif %}
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                        {% if pollution.heavy_rain_warninge %}
-                            <img src="/static/images/red_cross_small.jpeg" alt="warning">
-                        {% else %}
-                            <img src="/static/images/green_tick_small.jpeg" alt="warning">
-                        {% endif %}
-                    </td>
-                </tr>
-            </table>
         <p>
             More information on this water quality data can be found at the <a href="https://environment.data.gov.uk/bwq/profiles/help-understanding-data.html">Environment Agency's website</a>
         </p>
