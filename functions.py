@@ -68,11 +68,8 @@ def swim_times(tides):
 
 
 def forecast():
-    # API: https://www.meteomatics.com/en/weather-api/#api-packages
 
-    # Example API request URL = https://api.meteomatics.com/2023-01-31T11:40:00.000+00:00/t_2m:C/51.3926103,1.3933696/html?model=mix
-
-    # Do the same for 24 hours from now
+    # If later adding functionality to do the same for 24 hours from now
     # tomo_to_last_hour = (datetime.now() + timedelta(hours=24)).replace(second=0, microsecond=0, minute=0).strftime("%Y-%m-%dT%H:%M:%S")
 
     # Querying for wind info on today's date 04:00 to 23:59. Returns in metres/second
