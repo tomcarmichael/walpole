@@ -72,9 +72,6 @@ def forecast():
 
     # Example API request URL = https://api.meteomatics.com/2023-01-31T11:40:00.000+00:00/t_2m:C/51.3926103,1.3933696/html?model=mix
 
-    # Retrieve the current date and time, rounded down to the last hour, and format for API request
-    # now_to_last_hour = datetime.now().replace(second=0, microsecond=0, minute=0).strftime("%Y-%m-%dT%H:%M:%S")
-
     # Do the same for 24 hours from now
     # tomo_to_last_hour = (datetime.now() + timedelta(hours=24)).replace(second=0, microsecond=0, minute=0).strftime("%Y-%m-%dT%H:%M:%S")
 
