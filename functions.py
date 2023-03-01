@@ -1,10 +1,7 @@
 import requests
 from datetime import date, timedelta, datetime
-from dotenv import load_dotenv
-import os
+from config import ADMIRALTY_API_KEY, METEOMATICS_USERNAME, METEOMATICS_PWORD
 
-# Load hidden API Keys
-load_dotenv()
 
 # Today's date to be used by several functions - but may not be necessary - check when implementation complete
 todays_date = date.today().isoformat()
@@ -21,7 +18,7 @@ def tides():
     days = 1
     try:
         url = f"https://admiraltyapi.azure-api.net/uktidalapi/api/V1/Stations/{location_id}/TidalEvents?{days}"
-        response = requests.get(url, headers={"Ocp-Apim-Subscription-Key":os.getenv("ADMIRALTY_API_KEY")})
+        response = requests.get(url, headers={"Ocp-Apim-Subscription-Key": ADMIRALTY_API_KEY})
         response.raise_for_status()
     except requests.RequestException:
         return "Request Exception"
@@ -76,7 +73,7 @@ def forecast():
     url = f"https://api.meteomatics.com/{todays_date}T04:00:00.000+00:00--{todays_date}T22:59:00.000+00:00:PT1H/wind_speed_10m:ms,wind_dir_10m:d,sunrise:sql,sunset:sql,weather_symbol_1h:idx,t_2m:C/{COORIDINATES}/json?model=mix"
 
     try:
-        response = requests.get(url, auth=(os.getenv("METEOMATICS_USERNAME"), os.getenv("METEOMATICS_PWORD")))
+        response = requests.get(url, auth=(METEOMATICS_USERNAME, METEOMATICS_PWORD))
     except requests.RequestException:
         return None
 
