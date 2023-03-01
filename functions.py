@@ -1,6 +1,6 @@
 import requests
 from datetime import date, timedelta, datetime
-from config import ADMIRALTY_API_KEY, METEOMATICS_USERNAME, METEOMATICS_PWORD
+from config import ADMIRALTY_API_KEY
 
 # Today's date to be used by several functions - but may not be necessary - check when implementation complete
 todays_date = date.today().isoformat()
@@ -58,7 +58,7 @@ def swim_times(tides):
         if dict["EventType"] == "High Tide":
             no_swim_periods.append([shift_time(dict["Time"], -2), shift_time(dict["Time"], 2)])
     return no_swim_periods
-    
+
 
 """
 Excellent	EC: ≤250 cfu/100ml ; IE: ≤100 cfu/100ml (95th percentile)
