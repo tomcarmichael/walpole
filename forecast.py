@@ -3,27 +3,27 @@ from datetime import date
 from config import METEOMATICS_USERNAME, METEOMATICS_PWORD
 
 todays_date = date.today().isoformat()
-# Tidal pool longditude and latitude
+# Walpole Bay tidal pool longditude and latitude:
 COORIDINATES = "51.3926103,1.3933696"
 
+# Reference: https://www.meteomatics.com/en/api/getting-started/
 def forecast():
-    # If later adding functionality to do the same for 24 hours from now:
+    # If later adding functionality to do the same for 24 hours from now use:
     # tomo_to_last_hour = (datetime.now() + timedelta(hours=24)).replace(second=0, microsecond=0, minute=0).strftime("%Y-%m-%dT%H:%M:%S")
-    # Querying for wind info on today's date 04:00 to 23:59. Returns in metres/second
+    # Querying for weather info on today's date 04:00 to 23:59 to cover all likely swim times:
     url = f"https://api.meteomatics.com/{todays_date}T04:00:00.000+00:00--{todays_date}T22:59:00.000+00:00:PT1H/wind_speed_10m:ms,wind_dir_10m:d,sunrise:sql,sunset:sql,weather_symbol_1h:idx,t_2m:C/{COORIDINATES}/json?model=mix"
     try:
         response = requests.get(url, auth=(METEOMATICS_USERNAME, METEOMATICS_PWORD))
     except requests.RequestException:
         return None
 
-# Retrieving wind speed data
+# Retrieving wind speed data:
     try:
-        # "data" contains an array where each element contains the info for a dfferent weather parameter...
-        # ...in the order they were given in URL request
-        # Save only the relevant data from API request (returns an array of dictionaries)
+        # "data" contains an array of the dfferent weather parameters in the order they were given in request URL
+        # Save only the relevant data from request (an array of dictionaries):
         data = response.json()["data"]
     except (KeyError, TypeError, ValueError):
-        return "JSON error - whole request"
+        return "JSON error - main request"
 
     times = []
     speeds = []
@@ -35,26 +35,21 @@ def forecast():
             dict['wind speed'] = round(dict.pop('value') * 2.23694, 2)
             times.append(dict['time'])
             speeds.append(dict['wind speed'])
-
     except (KeyError, TypeError, ValueError):
         return "JSON error - time and wind speed"
 
-    # Wind direction given in degrees from North. Eg. a direction of 45 degrees means that wind is coming from the Northeast.
-    avg_wind_direction = 0
-
+    # Initialise list to store wind direction values from throughout the day:
+    wind_directions = []
     try:
-        # Retrieving wind direction data which is at ["data"][1]
+        # Retrieve wind direction data, index [1] derived from position of paramter in request URL:
         for dict in data[1]["coordinates"][0]["dates"]:
-            # Would execution time be more optimised by adding these to an empty array so that counting the length of that array is quicker (doesn't include datetime keys/values?)
-            avg_wind_direction += dict['value']
-        # Calculate the average windspeed over the given time period
-        avg_wind_direction /= len(data)
-
+            wind_directions.append(dict['value'])
+        # Calculate the average windspeed over the given time period:
+        avg_wind_direction = sum(wind_directions) / len(wind_directions)
     except (KeyError, TypeError, ValueError):
         return "JSON error"
 
-    # If between 22.5 and 67.5 = North East. 67.5 and 112.5 = East 112.5 and 157.5 = South East . 157.5 and 202.5 = South.
-    # 202.5 and 247.5 = South West. 247.5 and 292.5 = West 292.5 and 337.5 = North West 337.5 and 360 = North AND 0 and 22.5 = North
+    # Wind direction is returned in degrees from North. Eg. 45 == wind is coming from the Northeast.
     if avg_wind_direction in range(22,67):
         wind_direction = "North East"
     elif avg_wind_direction in range(67,112):
@@ -67,36 +62,42 @@ def forecast():
         wind_direction = "South West"
     elif avg_wind_direction in range(247,292):
         wind_direction = "West"
+    # Else, between 337.5 and 360 or between 0 and 22.5 == North
     else:
         wind_direction = "North"
 
+    # Retrieve today's sunrise time:
     try:
         sunrise = data[2]["coordinates"][0]["dates"][0]["value"][11:16]
     except (KeyError, TypeError, ValueError):
         return "JSON error"
 
+    # Retrieve today's sunset time:
     try:
         sunset = data[3]["coordinates"][0]["dates"][0]["value"][11:16]
     except (KeyError, TypeError, ValueError):
         return "JSON error"
 
+    # Weather symbol codes correspond to the file names of images in ./static/images/symbols/
+    # Each index of the list corresponds to a subsequent hour of the day
     symbols = []
     try:
-        # Rename "date" key to "time" and format it as such
+        # Rename "date" key to "time" and format it as such:
         for dict in data[4]["coordinates"][0]["dates"]:
             dict['symbol'] = dict.pop('value')
+            # Convert from int to string and append to symbols list:
             symbols.append(str(dict['symbol']))
-
     except (KeyError, TypeError, ValueError):
         return "JSON error"
 
+    # Retrieve temperatures at hourly intervals throught the day
+    # Each index of the list corresponds to a subsequent hour of the day
     temperatures = []
     try:
-        # Rename "date" key to "time" and format it as such
+        # Rename "date" key to "time" and format it as such:
         for dict in data[5]["coordinates"][0]["dates"]:
             dict['temp'] = dict.pop('value')
             temperatures.append(dict['temp'])
-
     except (KeyError, TypeError, ValueError):
         return "JSON error"
 
