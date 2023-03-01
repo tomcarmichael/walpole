@@ -14,9 +14,7 @@ weather_info = forecast()
 
 
 # Function to generate windspeed graph using MatplotLib
-@app.route("/mysuperplot", methods=["GET"])
 def plotView():
-
     # Generate plot
     fig = Figure()
     axis = fig.add_subplot(1, 1, 1)
