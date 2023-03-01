@@ -1,5 +1,5 @@
 """
-Water quality classifications =>
+UK Environment Agency water quality classifications are as follows =>
 Excellent	EC: ≤250 cfu/100ml ; IE: ≤100 cfu/100ml (95th percentile)
 Good	EC: ≤500 cfu/100ml ; IE: ≤200 cfu/100ml (95th percentile)
 Sufficient	EC: ≤500 cfu/100ml ; IE: ≤185 cfu/100ml (90th percentile)
@@ -7,7 +7,7 @@ Poor	means that the values are worse than the sufficient
 https://environment.data.gov.uk/bwq/profiles/help-understanding-data.html
 """
 
-# Takes ec_count and ie_count as integers, qualififers as a str either '<' '=' or '>'
+# Takes Ecoli count and intestinal Enterococci count as ints, qualififers as a str either '<' '=' or '>'
 def classify_sample(ec_count, ec_qualifier, ie_count, ie_qualifier):
     # Evaluate E Coli level classification
     if ec_qualifier == '<':
