@@ -13,7 +13,7 @@ https://environment.data.gov.uk/bwq/profiles/help-understanding-data.html
 def latest_sample_class(ec_count, ec_qualifier, ie_count, ie_qualifier):
     # Evaluate E Coli level classification
     if ec_qualifier == '<':
-        if ec_count < 251:
+        if ec_count <= 250:
             ec = "Excellent"
         # if ec count given as less than 251 we cannot be sure if it is excellent or good.
         else:
@@ -25,15 +25,15 @@ def latest_sample_class(ec_count, ec_qualifier, ie_count, ie_qualifier):
         else:
             ec = "Unknown"
     else:
-        if ec_count < 251:
+        if ec_count <= 250:
             ec = "Excellent"
-        elif ec_count < 501:
+        elif ec_count <= 500:
             ec = "Good or Sufficient"
         else:
             ec = "Poor"
     # Evaluate intestinal Enterococci level classification
     if ie_qualifier == '<':
-        if ie_count < 101:
+        if ie_count <= 100:
             ie = "Excellent"
         # if ie count given as less than 201 we cannot be sure if it is excellent or good.
         else:
@@ -45,9 +45,9 @@ def latest_sample_class(ec_count, ec_qualifier, ie_count, ie_qualifier):
         else:
             ie = "Unknown"
     else:
-        if ie_count < 101:
+        if ie_count <= 100:
             ie = "Excellent"
-        elif ie_count < 201:
+        elif ie_count <= 200:
             ie = "Good or Sufficient"
         else:
             ie = "Poor"
