@@ -32,8 +32,6 @@ def plotView():
     # Encode PNG image to base64 string
     pngImageB64String = "data:image/png;base64,"
     pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
-
-    # return render_template("image.html", image=pngImageB64String)
     return pngImageB64String
 
 
