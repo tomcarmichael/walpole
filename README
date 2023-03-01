@@ -5,3 +5,5 @@ and Admirality API:
 https://admiraltyapi.portal.azure-api.net/
 
 It will be necessary to create your own account and generate an API key for each service should you be running this app locally.
+
+See ./bathing-water-quality.ttl for more information on the data provided by the UK Gov Environment Agency regarding water quality.
