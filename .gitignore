@@ -1,7 +1,10 @@
 # Hide API password info from public github repo
 .env
+config.py
 # Do not track change to py cache files
 *.pyc
 __pycache__/
 # Do not track virtual environment files
 venv/
+
+
