@@ -1,0 +1,7 @@
+API keys are stored in the config.py file for the meteomatics API:
+https://www.meteomatics.com/en/api/available-parameters/#api-basic
+
+and Admirality API:
+https://admiraltyapi.portal.azure-api.net/
+
+It will be necessary to create your own account and generate an API key for each service should you be running this app locally.
