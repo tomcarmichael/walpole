@@ -6,7 +6,6 @@ from functions import tides, forecast, swim_times, water_quality
 
 # Configure application
 app = Flask(__name__)
-
 # Ensure templates are auto-reloaded when running flask app and making changes on the fly
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
@@ -26,7 +25,6 @@ def plotView():
     axis.set_ylabel("MPH")
     axis.grid()
     # Populate graph with time in hours, speeds in MPH, taking every other value (every 2 hours)
-    # axis.plot(weather_info[0][0], weather_info[0][1])
     axis.plot(weather_info[0][0][::2], weather_info[0][1][::2] )
 
     # Convert plot to PNG image
@@ -46,11 +44,8 @@ def index():
     # Retrieve wind speed at 13:00 as indicator for the day
     wind_speed_int = int(weather_info[0][1][9])
     tide_info = tides()
-    wind_plot = plotView()
-    # water_quality() returns a dict containing 'risk_prediction', 'heavy_rain_warning', 'latest_compliance_assessment'
-    # TO DO = update this after adding "latestSampleAssessment" as rtn value in functions.py
     pollution = water_quality()
-
+    wind_plot = plotView()
     return render_template("index.html", tides=tide_info, swim_times=swim_times(tide_info), wind_plot=wind_plot, wind_speed_int=wind_speed_int,
     weather_info=weather_info, pollution=pollution)
 

@@ -65,7 +65,6 @@ def swim_times(tides):
 
 
 def forecast():
-
     # If later adding functionality to do the same for 24 hours from now
     # tomo_to_last_hour = (datetime.now() + timedelta(hours=24)).replace(second=0, microsecond=0, minute=0).strftime("%Y-%m-%dT%H:%M:%S")
 
