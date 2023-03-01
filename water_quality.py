@@ -1,5 +1,5 @@
 import requests
-from sample_classification import latest_sample_class
+from sample_classification import classify_sample
 
 
 def water_quality():
@@ -42,7 +42,7 @@ def water_quality():
         # Returned from API as a string either '<' '=' '>'
         ie_qualifier = latest_sample_data["intestinalEnterococciQualifier"]["countQualifierNotation"]
         # Calculating the classification of the latest water quality sample
-        latest_sample_classification = latest_sample_class(ec_count, ec_qualifier, ie_count, ie_qualifier)
+        latest_sample_classification = classify_sample(ec_count, ec_qualifier, ie_count, ie_qualifier)
 
 
     except (KeyError, TypeError, ValueError):

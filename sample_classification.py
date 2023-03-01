@@ -8,7 +8,7 @@ https://environment.data.gov.uk/bwq/profiles/help-understanding-data.html
 """
 
 # Takes ec_count and ie_count as integers, qualififers as a str either '<' '=' or '>'
-def latest_sample_class(ec_count, ec_qualifier, ie_count, ie_qualifier):
+def classify_sample(ec_count, ec_qualifier, ie_count, ie_qualifier):
     # Evaluate E Coli level classification
     if ec_qualifier == '<':
         if ec_count <= 250:
