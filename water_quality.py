@@ -52,7 +52,7 @@ def water_quality():
         return "JSON error"
 
     # Return dict, values are strings. Dates reformatted to UK format with reformat() defined in functions.py
-    water_quality = {"risk_prediction": risk_prediction, "risk_prediction_expiry": reformat(risk_prediction_expiry), 
+    water_quality = {"risk_prediction": risk_prediction.capitalize(), "risk_prediction_expiry": reformat(risk_prediction_expiry), 
     "heavy_rain_warning": heavy_rain_warning, "latest_compliance_assessment": latest_compliance_assessment,
     "latest_compliance_date": reformat(latest_compliance_date), "latest_sample_date": reformat(latest_sample_date),
     "latest_sample_classification": latest_sample_classification}
