@@ -134,6 +134,15 @@
                     {% endif %}
                 </td>
                 <td>
+                    {% if pollution.latest_sample_classification == "Excellent" %}
+                        <img src="/static/images/3-stars.png" alt="Excellent">
+                    {% elif pollution.latest_sample_classification == "Good" %}
+                        <img src="/static/images/2-stars.png" alt="Good">
+                    {% elif pollution.latest_sample_classification == "Sufficient" %}
+                        <img src="/static/images/1-star.png" alt="Sufficient">
+                    {% elif pollution.latest_sample_classification == "Poor" %}
+                        <img src="/static/images/0-stars.png" alt="Poor">
+                    {% endif %}
                 </td>
                 <td>
                     {% if pollution.heavy_rain_warning  %}
