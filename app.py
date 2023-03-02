@@ -2,7 +2,7 @@ from flask import Flask, render_template
 import io, base64
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
-from functions import tides, swim_times
+from tides import tides, swim_times
 from forecast import forecast
 from water_quality import water_quality
 
