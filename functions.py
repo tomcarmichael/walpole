@@ -1,4 +1,7 @@
 from datetime import timedelta, datetime
+import io, base64
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 
 
 # Function that takes HH:MM formatted string and shifts it forward or back by given number of hours
@@ -18,3 +21,26 @@ def reformat(date):
         array = array[::-1]
         fdate = '-'.join(array)
         return fdate
+
+
+# Function to generate windspeed graph using MatplotLib
+def plotView(hours, speeds):
+    # Generate plot
+    fig = Figure()
+    axis = fig.add_subplot(1, 1, 1)
+    axis.set_title("Today's Wind Speed")
+    axis.set_xlabel("Time")
+    axis.set_ylabel("MPH")
+    axis.grid()
+    # Populate graph with time in hours, speeds in MPH
+    axis.plot(hours, speeds)
+
+    # Convert plot to PNG image
+    pngImage = io.BytesIO()
+    FigureCanvas(fig).print_png(pngImage)
+    
+
+    # Encode PNG image to base64 string
+    pngImageB64String = "data:image/png;base64,"
+    pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
+    return pngImageB64String
