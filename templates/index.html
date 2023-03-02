@@ -127,10 +127,10 @@
                 <td>
                 </td>
                 <td>
-                    {% if pollution.heavy_rain_warning == "No"  %}
-                        <img src="/static/images/green_tick_small.jpeg" alt="safe">
-                    {% else %}
+                    {% if pollution.heavy_rain_warning  %}
                         <img src="/static/images/red_cross_small.jpeg" alt="warning">
+                    {% else %}
+                        <img src="/static/images/green_tick_small.jpeg" alt="safe">
                     {% endif %}
                 </td>
             </tr>
