@@ -76,6 +76,9 @@
         <table class="table table-striped">
             <tr>
                 <th>
+                    Latest Water Sample taken {{ pollution.latest_sample_date}}
+                </th>
+                <th>
                     Latest Risk Prediction
                 </th>
                 <th>
@@ -85,13 +88,13 @@
                     Latest Annual Classifcation
                 </th>
                 <th>
-                    Latest Water Sample taken {{ pollution.latest_sample_date}}
-                </th>
-                <th>
                     Heavy Rain Impacting Water Quality? 
                 </th>
             </tr>
             <tr>
+                <td>
+                    {{ pollution.latest_sample_classification}}
+                </td>
                 <td>
                     <b>{{ pollution.risk_prediction}}</b>
                 </td>
@@ -102,9 +105,6 @@
                     <b>{{ pollution.latest_compliance_assessment}}</b>
                 </td>
                 <td>
-                    {{ pollution.latest_sample_classification}}
-                </td>
-                <td>
                     {% if pollution.heavy_rain_warning %}
                         <b>YES - WARNING IN PLACE</b>
                     {% else %}
@@ -113,6 +113,17 @@
                 </td>
             </tr>
             <tr>
+                <td>
+                    {% if pollution.latest_sample_classification == "Excellent" %}
+                        <img src="/static/images/3-stars.png" alt="Excellent">
+                    {% elif pollution.latest_sample_classification == "Good" %}
+                        <img src="/static/images/2-stars.png" alt="Good">
+                    {% elif pollution.latest_sample_classification == "Sufficient" %}
+                        <img src="/static/images/1-star.png" alt="Sufficient">
+                    {% elif pollution.latest_sample_classification == "Poor" %}
+                        <img src="/static/images/0-stars.png" alt="Poor">
+                    {% endif %}
+                </td>
                 <td>
                     {% if pollution.risk_prediction == "Normal" %}
                         <img src="/static/images/green_tick.png" alt="safe">
@@ -130,17 +141,6 @@
                     {% elif pollution.latest_compliance_assessment == "Sufficient" %}
                         <img src="/static/images/1-star.png" alt="Sufficient">
                     {% elif pollution.latest_compliance_assessment == "Poor" %}
-                        <img src="/static/images/0-stars.png" alt="Poor">
-                    {% endif %}
-                </td>
-                <td>
-                    {% if pollution.latest_sample_classification == "Excellent" %}
-                        <img src="/static/images/3-stars.png" alt="Excellent">
-                    {% elif pollution.latest_sample_classification == "Good" %}
-                        <img src="/static/images/2-stars.png" alt="Good">
-                    {% elif pollution.latest_sample_classification == "Sufficient" %}
-                        <img src="/static/images/1-star.png" alt="Sufficient">
-                    {% elif pollution.latest_sample_classification == "Poor" %}
                         <img src="/static/images/0-stars.png" alt="Poor">
                     {% endif %}
                 </td>

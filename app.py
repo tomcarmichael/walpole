@@ -2,7 +2,8 @@ from flask import Flask, render_template
 from tides import tides, no_swim_times
 from forecast import forecast
 from water_quality import water_quality
-from functions import plotView
+from functions import plotView, check_if_in_season
+from datetime import date
 
 # Configure application
 app = Flask(__name__)
@@ -21,8 +22,10 @@ def index():
     pollution = water_quality()
     # Generate graph with time in hours, speeds in MPH, taking every other value (every 2 hours)
     wind_plot = plotView(weather_info[0][0][::2], weather_info[0][1][::2])
+    # Check if today's date is in season for regular water quality testing, returned as a bool:
+    in_testing_season = check_if_in_season(date.today())
     return render_template("index.html", tides=tide_info, swim_times=no_swim_times(tide_info), wind_plot=wind_plot, wind_speed_int=wind_speed_int,
-    weather_info=weather_info, pollution=pollution)
+    weather_info=weather_info, pollution=pollution, in_testing_season=in_testing_season)
 
 
 @app.route("/resources")

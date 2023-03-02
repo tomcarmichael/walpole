@@ -44,3 +44,13 @@ def plotView(hours, speeds):
     pngImageB64String = "data:image/png;base64,"
     pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
     return pngImageB64String
+
+# Takes a date object from datetime module to discern if it is in season for regular water testing
+# Samples are taken weekly by Environment Agency between May 1st 2022 and Sep 30th 2022
+def check_if_in_season(date):
+    if date.month >= 5 and date.month <= 10:
+        return True
+    elif date.month == 11 and date.month <= 10:
+        return True
+    else:
+        return False
