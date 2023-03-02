@@ -73,16 +73,20 @@
         {% elif weather_info[0]  == "East" or "West" %}<p class="text-warning">Today's wind is mostly perpendicular to the Tidal Pool</p>
         {% else %}<p class="text-warning">Today's wind is mostly South facing (towards the coastline)</p>{% endif %}
 
+        {% if not in_testing_season %}
+            <p>
+                Regular water quality testing is carried out by the Environment Agency from the 1st May to the end of September.<br>
+                Out of season, only the annual classifcation of the water water and any warnings regarding heavy rain impacting water quality
+                 will be displayed.
+            </p>
+        {% endif %}        
         <table class="table table-striped">
             <tr>
                 <th>
-                    Latest Water Sample taken {{ pollution.latest_sample_date}}
+                    Latest Water Sample
                 </th>
                 <th>
                     Latest Risk Prediction
-                </th>
-                <th>
-                    Risk Prediction Expiry
                 </th>
                 <th>
                     Latest Annual Classifcation
@@ -97,9 +101,6 @@
                 </td>
                 <td>
                     <b>{{ pollution.risk_prediction}}</b>
-                </td>
-                <td>
-                    {{ pollution.risk_prediction_expiry }}
                 </td>
                 <td>
                     <b>{{ pollution.latest_compliance_assessment}}</b>
@@ -132,8 +133,6 @@
                     {% endif %}
                 </td>
                 <td>
-                </td>
-                <td>
                     {% if pollution.latest_compliance_assessment == "Excellent" %}
                         <img src="/static/images/3-stars.png" alt="Excellent">
                     {% elif pollution.latest_compliance_assessment == "Good" %}
@@ -152,13 +151,23 @@
                     {% endif %}
                 </td>
             </tr>
+            <tr>
+                <td>
+                    Taken <strong>{{ pollution.latest_sample_date}}</strong>
+                </td>
+                <td>
+                    Expires <strong>{{ pollution.risk_prediction_expiry }}</strong>
+                </td>
+                <td>
+                    Issued <strong>{{ pollution.latest_compliance_date }}</strong>
+                </td>
+                <td>
+                </td>
+            </tr>
         </table>
         
         <p>
             <img src="{{ wind_plot }}"/>
         </p>
 
-        <p>
-            More information on this water quality data can be found at the <a href="https://environment.data.gov.uk/bwq/profiles/help-understanding-data.html">Environment Agency's website</a>
-        </p>
 {% endblock %}
