@@ -82,7 +82,7 @@
                     Risk Prediction Expiry
                 </th>
                 <th>
-                    Latest Annual Classifcation from {{ pollution.latest_compliance_date}}
+                    Latest Annual Classifcation
                 </th>
                 <th>
                     Latest Water Sample taken {{ pollution.latest_sample_date}}
@@ -115,22 +115,31 @@
             <tr>
                 <td>
                     {% if pollution.risk_prediction == "normal" %}
-                        <img src="/static/images/green_tick_small.jpeg" alt="safe">
+                        <img src="/static/images/green_tick.png" alt="safe">
                     {% else %}
-                        <img src="/static/images/red_cross_small.jpeg" alt="warning">
+                        <img src="/static/images/red_cross.png" alt="warning">
                     {% endif %}
                 </td>
                 <td>
                 </td>
                 <td>
+                    {% if pollution.latest_compliance_assessment == "Excellent" %}
+                        <img src="/static/images/3-stars.png" alt="Excellent">
+                    {% elif pollution.latest_compliance_assessment == "Good" %}
+                        <img src="/static/images/2-stars.png" alt="Good">
+                    {% elif pollution.latest_compliance_assessment == "Sufficient" %}
+                        <img src="/static/images/1-star.png" alt="Sufficient">
+                    {% elif pollution.latest_compliance_assessment == "Poor" %}
+                        <img src="/static/images/0-stars.png" alt="Poor">
+                    {% endif %}
                 </td>
                 <td>
                 </td>
                 <td>
                     {% if pollution.heavy_rain_warning  %}
-                        <img src="/static/images/red_cross_small.jpeg" alt="warning">
+                        <img src="/static/images/red_cross.png" alt="warning">
                     {% else %}
-                        <img src="/static/images/green_tick_small.jpeg" alt="safe">
+                        <img src="/static/images/green_tick.png" alt="safe">
                     {% endif %}
                 </td>
             </tr>
