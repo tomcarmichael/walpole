@@ -43,7 +43,7 @@ def tides():
     
 
 # Takes the array of dicts returned by tides() & calculates times when it's NOT possible to swim in the Tidal Pool
-def swim_times(tides):
+def no_swim_times(tides):
     # Create 2D array to store start and end times of no swim periods that occur twice daily around high tide
     no_swim_periods = []
     # Check each dictionary in the array for High Tide entries
