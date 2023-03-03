@@ -98,7 +98,7 @@
                 <th>
                     Latest Risk Prediction
                 </th>
-                <th class="annual_classification">
+                <th>
                     Latest Annual Classifcation
                 </th>
                 <th>
@@ -112,7 +112,7 @@
                 <td>
                     <b>{{ pollution.risk_prediction}}</b>
                 </td>
-                <td class="annual_classification">
+                <td>
                     <b>{{ pollution.latest_compliance_assessment}}</b>
                 </td>
                 <td>
@@ -124,34 +124,43 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td id="latest_sample">
                     {% if pollution.latest_sample_classification == "Excellent" %}
-                        <img src="/static/images/3-stars.png" alt="Excellent">
+                        <img src="/static/images/3-stars.png" alt="Excellent" class="latest_sample_img">
                     {% elif pollution.latest_sample_classification == "Good" %}
-                        <img src="/static/images/2-stars.png" alt="Good">
+                        <img src="/static/images/2-stars.png" alt="Good" class="latest_sample_img">
                     {% elif pollution.latest_sample_classification == "Sufficient" %}
-                        <img src="/static/images/1-star.png" alt="Sufficient">
+                        <img src="/static/images/1-star.png" alt="Sufficient" class="latest_sample_img">
                     {% elif pollution.latest_sample_classification == "Poor" %}
-                        <img src="/static/images/0-stars.png" alt="Poor">
+                        <img src="/static/images/0-stars.png" alt="Poor" class="latest_sample_img">
                     {% endif %}
+                    <div id="latest_sample_date">
+                        Taken <strong>{{ pollution.latest_sample_date}}</strong>
+                    </div>
                 </td>
-                <td>
+                <td id="risk_prediction">
                     {% if pollution.risk_prediction == "Normal" %}
-                        <img src="/static/images/green_tick.png" alt="safe">
+                        <img src="/static/images/green_tick.png" alt="safe" class="risk_prediction_img">
                     {% else %}
-                        <img src="/static/images/red_cross.png" alt="warning">
+                        <img src="/static/images/red_cross.png" alt="warning" class="risk_prediction_img">
                     {% endif %}
+                    <div id="risk_prediction_date">
+                        Expires <strong>{{ pollution.risk_prediction_expiry }}</strong>
+                    </div>
                 </td>
-                <td class="annual_classification">
+                <td id="annual_classification">
                     {% if pollution.latest_compliance_assessment == "Excellent" %}
-                        <img src="/static/images/3-stars.png" alt="Excellent">
+                        <img src="/static/images/3-stars.png" alt="Excellent" class="classification_img">
                     {% elif pollution.latest_compliance_assessment == "Good" %}
-                        <img src="/static/images/2-stars.png" alt="Good">
+                        <img src="/static/images/2-stars.png" alt="Good" class="classification_img">
                     {% elif pollution.latest_compliance_assessment == "Sufficient" %}
-                        <img src="/static/images/1-star.png" alt="Sufficient">
+                        <img src="/static/images/1-star.png" alt="Sufficient" class="classification_img">
                     {% elif pollution.latest_compliance_assessment == "Poor" %}
-                        <img src="/static/images/0-stars.png" alt="Poor">
+                        <img src="/static/images/0-stars.png" alt="Poor" class="classification_img">
                     {% endif %}
+                    <div id="annual_classification_date">
+                        Issued <strong>{{ pollution.latest_compliance_date }}</strong>
+                    </div>
                 </td>
                 <td>
                     {% if pollution.heavy_rain_warning  %}
@@ -159,19 +168,6 @@
                     {% else %}
                         <img src="/static/images/green_tick.png" alt="safe">
                     {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Taken <strong>{{ pollution.latest_sample_date}}</strong>
-                </td>
-                <td>
-                    Expires <strong>{{ pollution.risk_prediction_expiry }}</strong>
-                </td>
-                <td id="annual_classification_date">
-                    Issued <strong>{{ pollution.latest_compliance_date }}</strong>
-                </td>
-                <td>
                 </td>
             </tr>
         </table>

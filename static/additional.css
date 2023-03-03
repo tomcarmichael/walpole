@@ -1,8 +1,93 @@
-#annual_classification_date {
-    display: none;
-  }
-  
-.annual_classification:hover + #annual_classification_date {
-    display: block;
-  }
+/* Risk prediction image fade out & text fade in styling: */
 
+#risk_prediction {
+  position: relative;
+}
+
+#risk_prediction_date {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+
+.risk_prediction_img {
+  opacity: 1;
+  display: inline;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+
+#risk_prediction:hover .risk_prediction_img {
+  opacity: 0.3;
+}
+
+#risk_prediction:hover #risk_prediction_date {
+  opacity: 1;
+}
+
+/* Annual classification image fade out & text fade in styling: */
+
+#annual_classification {
+  position: relative;
+}
+
+#annual_classification_date {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+
+.classification_img {
+  opacity: 1;
+  display: inline;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+
+#annual_classification:hover .classification_img {
+  opacity: 0.3;
+}
+
+#annual_classification:hover #annual_classification_date {
+  opacity: 1;
+}
+
+/* Latest sample quality image fade out & text fade in styling: */
+
+
+#latest_sample {
+  position: relative;
+}
+
+#latest_sample_date {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+
+.latest_sample_img {
+  opacity: 1;
+  display: inline;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+
+#latest_sample:hover .latest_sample_img {
+  opacity: 0.3;
+}
+
+#latest_sample:hover #latest_sample_date {
+  opacity: 1;
+}
