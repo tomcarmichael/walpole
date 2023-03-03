@@ -1,0 +1,8 @@
+#annual_classification_date {
+    display: none;
+  }
+  
+.annual_classification:hover + #annual_classification_date {
+    display: block;
+  }
+
