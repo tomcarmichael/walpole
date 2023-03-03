@@ -85,19 +85,19 @@
         </strong>    
         {% if not in_testing_season %}
             <p>
-                Regular water quality testing is carried out by the Environment Agency from the 1st May to the end of September.<br>
-                Out of season, only the annual classifcation of the water water and any warnings regarding heavy rain impacting water quality
-                 will be displayed.
+                Regular water quality testing is carried out by the Environment Agency from the <strong>start of May</strong> to the <strong>end of September.</strong>
             </p>
         {% endif %}        
         <table class="table table-striped">
             <tr>
-                <th>
-                    Latest Water Sample
-                </th>
-                <th>
-                    Latest Risk Prediction
-                </th>
+                {% if in_testing_season %}
+                    <th>
+                        Latest Water Sample
+                    </th>
+                    <th>
+                        Latest Risk Prediction
+                    </th>
+                {% endif %}
                 <th>
                     Latest Annual Classifcation
                 </th>
@@ -106,12 +106,14 @@
                 </th>
             </tr>
             <tr>
-                <td>
-                    {{ pollution.latest_sample_classification}}
-                </td>
-                <td>
-                    <b>{{ pollution.risk_prediction}}</b>
-                </td>
+                {% if in_testing_season %}
+                    <td>
+                        {{ pollution.latest_sample_classification}}
+                    </td>
+                    <td>
+                        <b>{{ pollution.risk_prediction}}</b>
+                    </td>
+                {% endif %}
                 <td>
                     <b>{{ pollution.latest_compliance_assessment}}</b>
                 </td>
@@ -124,30 +126,32 @@
                 </td>
             </tr>
             <tr>
-                <td id="latest_sample">
-                    {% if pollution.latest_sample_classification == "Excellent" %}
-                        <img src="/static/images/3-stars.png" alt="Excellent" class="latest_sample_img">
-                    {% elif pollution.latest_sample_classification == "Good" %}
-                        <img src="/static/images/2-stars.png" alt="Good" class="latest_sample_img">
-                    {% elif pollution.latest_sample_classification == "Sufficient" %}
-                        <img src="/static/images/1-star.png" alt="Sufficient" class="latest_sample_img">
-                    {% elif pollution.latest_sample_classification == "Poor" %}
-                        <img src="/static/images/0-stars.png" alt="Poor" class="latest_sample_img">
-                    {% endif %}
-                    <div id="latest_sample_date">
-                        Taken <strong>{{ pollution.latest_sample_date}}</strong>
-                    </div>
-                </td>
-                <td id="risk_prediction">
-                    {% if pollution.risk_prediction == "Normal" %}
-                        <img src="/static/images/green_tick.png" alt="safe" class="risk_prediction_img">
-                    {% else %}
-                        <img src="/static/images/red_cross.png" alt="warning" class="risk_prediction_img">
-                    {% endif %}
-                    <div id="risk_prediction_date">
-                        Expires <strong>{{ pollution.risk_prediction_expiry }}</strong>
-                    </div>
-                </td>
+                {% if in_testing_season %}
+                    <td id="latest_sample">
+                        {% if pollution.latest_sample_classification == "Excellent" %}
+                            <img src="/static/images/3-stars.png" alt="Excellent" class="latest_sample_img">
+                        {% elif pollution.latest_sample_classification == "Good" %}
+                            <img src="/static/images/2-stars.png" alt="Good" class="latest_sample_img">
+                        {% elif pollution.latest_sample_classification == "Sufficient" %}
+                            <img src="/static/images/1-star.png" alt="Sufficient" class="latest_sample_img">
+                        {% elif pollution.latest_sample_classification == "Poor" %}
+                            <img src="/static/images/0-stars.png" alt="Poor" class="latest_sample_img">
+                        {% endif %}
+                        <div id="latest_sample_date">
+                            Taken <strong>{{ pollution.latest_sample_date}}</strong>
+                        </div>
+                    </td>
+                    <td id="risk_prediction">
+                        {% if pollution.risk_prediction == "Normal" %}
+                            <img src="/static/images/green_tick.png" alt="safe" class="risk_prediction_img">
+                        {% else %}
+                            <img src="/static/images/red_cross.png" alt="warning" class="risk_prediction_img">
+                        {% endif %}
+                        <div id="risk_prediction_date">
+                            Expires <strong>{{ pollution.risk_prediction_expiry }}</strong>
+                        </div>
+                    </td>
+                {% endif %}
                 <td id="annual_classification">
                     {% if pollution.latest_compliance_assessment == "Excellent" %}
                         <img src="/static/images/3-stars.png" alt="Excellent" class="classification_img">
