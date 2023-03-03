@@ -6,6 +6,8 @@
 
 {% block main %}
 
+<link rel="stylesheet" href="/static/additional.css">
+
         <h1>Today's Conditions</h1>
         <div class="table-responsive pt-4">
             <table class="table table-striped table-sm">
@@ -166,7 +168,7 @@
                 <td>
                     Expires <strong>{{ pollution.risk_prediction_expiry }}</strong>
                 </td>
-                <td class="annual_classification">
+                <td id="annual_classification_date">
                     Issued <strong>{{ pollution.latest_compliance_date }}</strong>
                 </td>
                 <td>
