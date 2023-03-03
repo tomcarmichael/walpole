@@ -6,6 +6,26 @@ todays_date = date.today().isoformat()
 # Walpole Bay tidal pool longditude and latitude:
 COORIDINATES = "51.3926103,1.3933696"
 
+
+def calcuate_cardinal_direction(direction_in_degrees):
+    # Wind direction is given in degrees from North. Eg. 45 == wind is coming from the Northeast.
+    if direction_in_degrees in range(22,67):
+        return "North East"
+    elif direction_in_degrees in range(67,112):
+        return "East"
+    elif direction_in_degrees in range(112,157):
+        return "South East"
+    elif direction_in_degrees in range(157,202):
+        return "South"
+    elif direction_in_degrees in range(202,247):
+        return "South West"
+    elif direction_in_degrees in range(247,292):
+        return "West"
+    # Else, between 337.5 and 360 or between 0 and 22.5 == North
+    else:
+        return "North"
+
+
 # Reference: https://www.meteomatics.com/en/api/getting-started/
 def forecast():
     # If later adding functionality to do the same for 24 hours from now use:
@@ -48,23 +68,9 @@ def forecast():
         avg_wind_direction = sum(wind_directions) / len(wind_directions)
     except (KeyError, TypeError, ValueError):
         return "JSON error"
-
-    # Wind direction is returned in degrees from North. Eg. 45 == wind is coming from the Northeast.
-    if avg_wind_direction in range(22,67):
-        wind_direction = "North East"
-    elif avg_wind_direction in range(67,112):
-        wind_direction = "East"
-    elif avg_wind_direction in range(112,157):
-        wind_direction = "South East"
-    elif avg_wind_direction in range(157,202):
-        wind_direction = "South"
-    elif avg_wind_direction in range(202,247):
-        wind_direction = "South West"
-    elif avg_wind_direction in range(247,292):
-        wind_direction = "West"
-    # Else, between 337.5 and 360 or between 0 and 22.5 == North
-    else:
-        wind_direction = "North"
+    
+    # Convert from an int (degrees from North) to a string of the cardinal direction eg. "East"
+    wind_direction = calcuate_cardinal_direction(avg_wind_direction)
 
     # Retrieve today's sunrise time:
     try:
