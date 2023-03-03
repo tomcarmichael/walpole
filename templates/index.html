@@ -63,16 +63,24 @@
                 </tr>
             </table>
         </p>
-        
-        {% if wind_speed_int > 19 %}<p class="text-danger">Wind speeds in excess of 20 MPH today - take care as water is likely to be very choppy, especially if wind is South facing!</p>
-        {% elif wind_speed_int > 14 and wind_speed_int < 20 %}<p class="text-danger">Winds over 15mph - expect choppy waters, especially if South facing</p>
-        {% elif wind_speed_int > 9 and wind_speed_int < 15 %}<p class="text-warning">Winds over 10mph might make for mildly choppy waters, especially if South facing</p>
-        {% else %}<p class="text-success">Today is looking mostly calm, with no particularly strong winds</p>{% endif %}
-
-        {% if weather_info[0] == "North East" or "North" or "North West" %}<p class="text-success">Today's wind is mostly North facing</p>
-        {% elif weather_info[0]  == "East" or "West" %}<p class="text-warning">Today's wind is mostly perpendicular to the Tidal Pool</p>
-        {% else %}<p class="text-warning">Today's wind is mostly South facing (towards the coastline)</p>{% endif %}
-
+        <strong>
+            {% if wind_speed_int > 19 %}
+                <p class="text-danger">Wind speeds in excess of 20 MPH today - take care as water is likely to be very choppy, especially if wind is South facing!</p>
+            {% elif wind_speed_int > 14 and wind_speed_int < 20 %}
+                <p class="text-danger">Winds over 15mph - expect choppy waters, especially if South facing</p>
+            {% elif wind_speed_int > 9 and wind_speed_int < 15 %}
+                <p class="text-warning">Winds over 10mph might make for mildly choppy waters, especially if South facing</p>
+            {% else %}
+                <p class="text-success">Today is looking mostly calm, with no particularly strong winds</p>
+            {% endif %}
+            {% if weather_info[0] == "North East" or "North" or "North West" %}
+                <p class="text-success">Today's wind is mostly North facing</p>
+            {% elif weather_info[0]  == "East" or "West" %}
+                <p class="text-warning">Today's wind is mostly perpendicular to the Tidal Pool</p>
+            {% else %}
+                <p class="text-warning">Today's wind is mostly South facing (towards the coastline)</p>
+            {% endif %}
+        </strong>    
         {% if not in_testing_season %}
             <p>
                 Regular water quality testing is carried out by the Environment Agency from the 1st May to the end of September.<br>
@@ -88,7 +96,7 @@
                 <th>
                     Latest Risk Prediction
                 </th>
-                <th>
+                <th class="annual_classification">
                     Latest Annual Classifcation
                 </th>
                 <th>
@@ -102,7 +110,7 @@
                 <td>
                     <b>{{ pollution.risk_prediction}}</b>
                 </td>
-                <td>
+                <td class="annual_classification">
                     <b>{{ pollution.latest_compliance_assessment}}</b>
                 </td>
                 <td>
@@ -132,7 +140,7 @@
                         <img src="/static/images/red_cross.png" alt="warning">
                     {% endif %}
                 </td>
-                <td>
+                <td class="annual_classification">
                     {% if pollution.latest_compliance_assessment == "Excellent" %}
                         <img src="/static/images/3-stars.png" alt="Excellent">
                     {% elif pollution.latest_compliance_assessment == "Good" %}
@@ -158,7 +166,7 @@
                 <td>
                     Expires <strong>{{ pollution.risk_prediction_expiry }}</strong>
                 </td>
-                <td>
+                <td class="annual_classification">
                     Issued <strong>{{ pollution.latest_compliance_date }}</strong>
                 </td>
                 <td>
