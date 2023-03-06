@@ -35,7 +35,7 @@ def forecast():
     try:
         response = requests.get(url, auth=(METEOMATICS_USERNAME, METEOMATICS_PWORD))
     except requests.RequestException:
-        return None
+        return f"{response.status_code} error"
 
 # Retrieving wind speed data:
     try:

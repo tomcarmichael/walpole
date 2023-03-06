@@ -16,12 +16,14 @@ weather_info = forecast()
 
 @app.route("/")
 def index():
-    # Retrieve wind speed at 13:00 as indicator for the day
-    wind_speed_int = int(weather_info[0][1][9])
     tide_info = tides()
     pollution = water_quality()
-    # Generate graph with time in hours, speeds in MPH, taking every other value (every 2 hours)
-    wind_plot = plotView(weather_info[0][0][::2], weather_info[0][1][::2])
+    # If weather_info has not returned an error message:
+    if not (isinstance(weather_info, str)):
+        # Retrieve wind speed at 13:00 as indicator for the day
+        wind_speed_int = int(weather_info[0][1][9])
+        # Generate graph with time in hours, speeds in MPH, taking every other value (every 2 hours)
+        wind_plot = plotView(weather_info[0][0][::2], weather_info[0][1][::2])
     # Check if today's date is in season for regular water quality testing, returned as a bool:
     in_testing_season = check_if_in_season(date.today())
     return render_template("index.html", tides=tide_info, swim_times=no_swim_times(tide_info), wind_plot=wind_plot, wind_speed_int=wind_speed_int,
