@@ -18,7 +18,7 @@ def tides():
         response = requests.get(url, headers={"Ocp-Apim-Subscription-Key": ADMIRALTY_API_KEY})
         response.raise_for_status()
     except requests.RequestException:
-        return "Request Exception"
+        return f"{response.status_code} error"
 
     try:
         full_json = response.json()
