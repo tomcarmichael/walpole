@@ -10,7 +10,7 @@ def water_quality():
         response = requests.get(url)
         response.raise_for_status()
     except requests.RequestException:
-        return "Request Exception"
+        return f"{response.status_code} error"
     try:
         # Create dictionary with only the relevant data
         data = response.json()["result"]["primaryTopic"]
