@@ -7,6 +7,7 @@ from datetime import date
 
 # Configure application
 app = Flask(__name__)
+app.debug = True
 # Ensure templates are auto-reloaded when running flask app and making changes on the fly
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
@@ -33,3 +34,5 @@ def index():
 @app.route("/resources")
 def resources():
     return render_template("resources.html")
+
+
