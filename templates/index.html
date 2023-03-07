@@ -58,9 +58,10 @@
                     {% endfor %}
                 </tr>
                 <tr>
-                    <td>{% if tides[0].EventType == "High Tide" %}{{ swim_times[0][0] }} till {{ swim_times[0][1] }}{% endif %}</td>
-                    <td>{% if tides[1].EventType == "High Tide" %}{{ swim_times[0][0] }} till {{ swim_times[0][1] }}{% endif %}</td>
-                    <td>{% if tides[2].EventType == "High Tide" %}{{ swim_times[1][0] }} till {{ swim_times[1][1] }}{% endif %}</td>
+		    <!-- Including error handling to check whether list index exists-->
+                    <td>{% if tides[0] and tides[0].EventType == "High Tide" %}{{ swim_times[0][0] }} till {{ swim_times[0][1] }}{% endif %}</td>
+                    <td>{% if tides[1] and tides[1].EventType == "High Tide" %}{{ swim_times[0][0] }} till {{ swim_times[0][1] }}{% endif %}</td>
+                    <td>{% if tides[2] and tides[2].EventType == "High Tide" %}{{ swim_times[1][0] }} till {{ swim_times[1][1] }}{% endif %}</td>
                     <!-- Occasionaly there will only be three tidal events for the day as time between each tidal event is just over 6 hours.-->
                     <td>{% if tides[3] and tides[3].EventType == "High Tide" %}{{ swim_times[1][0] }} till {{ swim_times[1][1] }}{% endif %}</td>
                 </tr>
