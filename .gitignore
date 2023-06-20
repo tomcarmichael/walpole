@@ -6,4 +6,6 @@ __pycache__/
 # Do not track virtual environment files
 venv/
 
+.DS_Store
+
 
