@@ -2,7 +2,7 @@
 
 A website for sea swimmers who use the Walpole Bay Tidal Pool in Margate, Kent.
 
-Built using Python and [Flask](https://flask.palletsprojects.com/en/2.2.x/), with the [Bootstrap](https://getbootstrap.com/) framework.
+Built using Python and [Flask](https://flask.palletsprojects.com/en/2.2.x/), with the [Bootstrap](https://getbootstrap.com/) framework for styling.
 
 ![Walpole Bay Tidal Pool](https://haeckels.co.uk/wp-content/uploads/2018/07/walpole.haeckels-768x553.jpg)
 
@@ -18,9 +18,13 @@ Install dependencies:
 
 `pip install -r requirements.txt`
 
-Start the development server:
+To start the development server:
 
 `flask run`
+
+Alternatively to start the gunicorn server for deployment:
+
+`gunicorn app:app`
 
 Open the link to the local server displayed in the terminal in your browser.
 
