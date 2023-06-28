@@ -1,6 +1,6 @@
 # Walpole Bay Tidal Pool community resource website
 
-A website for sea swimmers who use the Walpole Bay Tidal Pool in Margate, Kent.
+A website for sea swimmers who use the Walpole Bay Tidal Pool in Margate, Kent. Built to address the problem of needing to visit multiple different websites to check the tide times, weather conditions, and water pollution levels on any given day before heading out for a swim.
 
 Built using Python and [Flask](https://flask.palletsprojects.com/en/2.2.x/), with the [Bootstrap](https://getbootstrap.com/) framework for styling.
 
