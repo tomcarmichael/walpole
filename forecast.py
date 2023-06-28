@@ -7,7 +7,7 @@ todays_date = date.today().isoformat()
 COORIDINATES = "51.3926103,1.3933696"
 
 
-def calcuate_cardinal_direction(direction_in_degrees):
+def calculate_cardinal_direction(direction_in_degrees):
     # Wind direction is given in degrees from North. Eg. 45 == wind is coming from the Northeast.
     if direction_in_degrees in range(22,67):
         return "North East"
@@ -70,7 +70,7 @@ def forecast():
         return "JSON error"
     
     # Convert from an int (degrees from North) to a string of the cardinal direction eg. "East"
-    wind_direction = calcuate_cardinal_direction(avg_wind_direction)
+    wind_direction = calculate_cardinal_direction(avg_wind_direction)
 
     # Retrieve today's sunrise time:
     try:

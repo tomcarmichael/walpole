@@ -55,7 +55,3 @@ def no_swim_times(tides):
             # Using shift_time defined in functions.py
             no_swim_periods.append([shift_time(dict["Time"], -2), shift_time(dict["Time"], 2)])
     return no_swim_periods
-
-
-
-
