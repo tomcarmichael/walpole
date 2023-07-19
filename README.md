@@ -10,6 +10,10 @@ Built using Python and [Flask](https://flask.palletsprojects.com/en/2.2.x/), wit
 
 `git clone https://github.com/tomcarmichael/walpole.git`
 
+Create the virtual environment: 
+
+`python3 -m venv venv`
+
 Activate the virtual environment:
 
 `source ./venv/bin/activate`
